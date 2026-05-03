@@ -44,3 +44,31 @@ body {
 .animate-shake {
   animation: shake 0.4s ease-in-out;
 }
+
+/* Hero section — falling petals */
+@keyframes fall {
+  0% { top: -5%; transform: translateY(0) rotate(0deg); }
+  100% { top: 110%; transform: translateY(0) rotate(720deg); }
+}
+
+@keyframes sway {
+  0% { margin-left: -20px; }
+  100% { margin-left: 20px; }
+}
+
+/* Pixel art rendering */
+.pixelated {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: pixelated;
+}
+
+/* Slow breathing scale on the generated image */
+.animate-breath {
+  animation: breath 12s ease-in-out infinite;
+}
+
+@keyframes breath {
+  0%, 100% { transform: scale(1.02); filter: brightness(1); }
+  50% { transform: scale(1.06); filter: brightness(1.1); }
+}
