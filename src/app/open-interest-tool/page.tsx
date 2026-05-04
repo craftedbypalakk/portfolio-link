@@ -35,6 +35,7 @@ const OPEN_INTEREST_PRELOAD_URLS = [
   "/open-interest/switch-oi-change.webp",
   "/open-interest/switch-pcr.webp",
   "/open-interest/time-historical.webp",
+  "/open-interest/oi-action-cues.webp",
 ] as const;
 
 type TimeLens = "intraday" | "historical";
@@ -902,13 +903,14 @@ const DesignSolution = () => {
               trader needing to compare numbers across rows.
             </p>
             <div className="mt-[16px] flex justify-center">
-              <div className="relative h-[320px] w-[320px] overflow-hidden rounded-[8px] border border-[#2A2A2A]">
+              <div className="w-full max-w-[560px] overflow-hidden rounded-[8px] border border-[#2A2A2A]">
                 <Image
-                  src="/open-interest/switch-oi-change.webp"
-                  alt="Open interest chart with action cues at individual strikes"
-                  fill
-                  className="object-cover object-top"
-                  sizes="320px"
+                  src="/open-interest/oi-action-cues.webp"
+                  alt="Open interest in context: PCR, strike stepping, call and put OI, and long buildup cue on the chart"
+                  width={1024}
+                  height={969}
+                  className="h-auto w-full"
+                  sizes="(max-width: 560px) 100vw, 560px"
                 />
               </div>
             </div>
