@@ -1,7 +1,40 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
+import IntradayFilterScreensMarquee, {
+  type FilterScreenSlide,
+} from "@/components/IntradayFilterScreensMarquee";
+
+/** Layout widths; hero visual — Figma node 143:173008 (exported PNG in public) */
+const ARTBOARD_MAX_PX = 1080;
+const HERO_FIGMA_143_173008_W = 1024;
+const HERO_FIGMA_143_173008_H = 395;
+/** Volume based — Figma Case-studies frame 143:173221; export: groww-volume-shockers-143-173221.png */
+const VOLUME_FIGMA_143_173221_W = 1024;
+/** PNG cropped to remove export artifact (black strip + trailing white) */
+const VOLUME_FIGMA_143_173221_H = 591;
+/** Technicals + intraday entry — light-background export (public) */
+const TECHNICALS_SCREENER_MOCK_W = 1024;
+const TECHNICALS_SCREENER_MOCK_H = 597;
+/** Intraday filter views row — Figma Case-studies (link referenced 143:173008); titles match filter pills */
+const intradayFilterMarqueeSlides: FilterScreenSlide[] = [
+  { id: "volume-changes", title: "Volume changes" },
+  { id: "52-week", title: "52 week performance" },
+  { id: "rsi", title: "RSI" },
+  { id: "macd", title: "MACD" },
+  { id: "price-change", title: "Price change" },
+];
+/** Intraday screener block — Figma lead export (public) */
+const INTRADAY_SCREENER_LEAD_W = 441;
+const INTRADAY_SCREENER_LEAD_H = 347;
+/** Sector flow — trending widget, all sectors list, sector detail (Pharma) */
+const SECTOR_NAV_FLOW_W = 641;
+const SECTOR_NAV_FLOW_H = 1024;
+/** Stocks in news — old 2x2 price grid vs new list with headlines and sources */
+const STOCKS_IN_NEWS_OLD_NEW_W = 1024;
+const STOCKS_IN_NEWS_OLD_NEW_H = 880;
 
 const fadeIn = {
   initial: { opacity: 0, y: 16 },
@@ -10,19 +43,47 @@ const fadeIn = {
   transition: { duration: 0.5 },
 };
 
+/** Figma 143:173008 — Sohne Kräftig eyebrows → Inter 500 via layout until Sohne files exist */
+const cnEyebrow =
+  "font-case-inter font-medium uppercase tracking-[2px] text-[10px] leading-[12px]";
+const cnBody =
+  "font-groww-sans text-[14px] font-normal leading-[20px]";
+/** Inter — hero subcopy & meta (143:173020, 143:173024, 143:173027) */
+const cnInterMeta = "font-case-inter text-[12px] font-normal leading-normal";
+
 const SectionLabel = ({ label }: { label: string }) => (
-  <p
-    className="uppercase tracking-[2px] text-[10px] font-medium leading-[12px] text-[#353839]"
-    style={{ fontFamily: "'Inter', sans-serif" }}
-  >
-    {label}
-  </p>
+  <p className={`${cnEyebrow} text-[#353839]`}>{label}</p>
 );
 
 const Divider = () => (
-  <div className="w-full max-w-[400px] mx-auto">
-    <div className="h-px bg-[#e0e0e0]" />
-  </div>
+  <div
+    className="mx-auto h-px w-full max-w-[400px] bg-[#e0e0e0]"
+    role="separator"
+    aria-hidden="true"
+  />
+);
+
+/** Leave empty regions for exported mocks — swap for Next/Image when assets exist */
+const ImageSlot = ({
+  className,
+  label,
+  widthPx,
+  heightPx,
+}: {
+  className?: string;
+  label: string;
+  widthPx?: number;
+  heightPx?: number;
+}) => (
+  <div
+    className={`rounded-[12px] bg-[#f0f0f0] ring-1 ring-inset ring-black/[0.06] ${className ?? ""}`}
+    style={{
+      ...(widthPx !== undefined ? { width: widthPx } : {}),
+      ...(heightPx !== undefined ? { height: heightPx } : {}),
+    }}
+    role="img"
+    aria-label={label}
+  />
 );
 
 const AccentCard = ({
@@ -41,18 +102,39 @@ const AccentCard = ({
 );
 
 const TopBar = () => (
-  <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#e5e7eb]">
-    <div className="max-w-[1080px] mx-auto flex items-center justify-between px-[72px] h-[88px]">
+  <header className="sticky top-0 z-50 border-b border-[#e5e7eb] bg-white">
+    <div
+      className="mx-auto flex h-[60px] items-center justify-between px-[72px]"
+      style={{ maxWidth: ARTBOARD_MAX_PX }}
+    >
       <Link
         href="/"
-        className="flex items-center gap-2 text-[10px] font-medium tracking-[2px] uppercase text-[#353839] hover:opacity-70 transition-opacity"
+        className="font-pp-neue-bit flex items-center gap-[6px] text-[12px] font-normal uppercase tracking-[2.4px] text-black transition-opacity hover:opacity-70"
         aria-label="Back to case studies"
       >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M10 12L6 8L10 4" stroke="#353839" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M10 12L6 8L10 4"
+            stroke="#353839"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
         CASE STUDY
       </Link>
+      <p
+        className="font-pp-neue-bit text-[12px] font-normal uppercase tracking-[2.4px] text-black"
+        aria-label="Case study year"
+      >
+        2025
+      </p>
     </div>
   </header>
 );
@@ -60,43 +142,77 @@ const TopBar = () => (
 const Hero = () => (
   <motion.section
     {...fadeIn}
-    className="max-w-[1080px] mx-auto px-[72px] pt-[119px] pb-0"
+    className="mx-auto px-[72px] pb-0 pt-[36px]"
+    style={{ maxWidth: ARTBOARD_MAX_PX }}
+    aria-labelledby="stocks-explore-hero-heading"
   >
-    <div className="flex gap-0 items-start">
-      <div className="pt-[70px] w-[400px] shrink-0">
-        <h1
-          className="text-[40px] font-medium leading-[48px] text-[#353839] tracking-[0px]"
-          style={{ fontFamily: "'Inter', sans-serif" }}
-        >
-          Making Stock Discovery Easy on Groww
-        </h1>
-        <p className="mt-[20px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
-          Turning Stocks Explore into a place to research and trade.
-        </p>
+    <div className="w-full max-w-[936px]">
+      <h1
+        id="stocks-explore-hero-heading"
+        className="font-fragment-glare text-[36px] font-normal leading-normal tracking-normal text-[#353839] sm:text-[48px]"
+      >
+        Making Stock Discovery Easy on Groww
+      </h1>
+      <p
+        className={`${cnInterMeta} mt-[8px] max-w-[936px] text-[14px] leading-normal text-[#7f8283]`}
+      >
+        Turning Stocks Explore into a place to research and trade.
+      </p>
+
+      <div className="mt-[64px] flex flex-wrap items-start justify-between gap-y-[16px]">
+        <div className="min-w-[140px] shrink-0">
+          <p className={`${cnEyebrow} text-[#7f8283]`}>Role</p>
+          <p className={`${cnInterMeta} mt-[4px] text-[#353839]`}>
+            Product designer
+          </p>
+        </div>
+        <div className="max-w-[300px] shrink-0 text-left sm:ml-auto sm:text-right">
+          <p className={`${cnEyebrow} text-[#7f8283]`}>Team</p>
+          <p className={`${cnInterMeta} mt-[4px] text-right text-[#353839]`}>
+            1 Product designer, 1 Product Manager, 2 Developers
+          </p>
+        </div>
       </div>
-      <div className="flex-1 ml-[14px]" style={{ minHeight: 507 }} />
+
+      <figure className="mt-[43px] flex justify-center overflow-hidden bg-transparent">
+        <Image
+          src="/groww-stocks-explore-hero-143-173008.png"
+          alt="Stocks Explore hero concept: sectors and bullish or bearish signals, performance highlight, Nifty indices and Most bought on Groww"
+          width={HERO_FIGMA_143_173008_W}
+          height={HERO_FIGMA_143_173008_H}
+          className="block h-auto w-full max-w-[min(100%,936px)] align-top ring-1 ring-inset ring-black/[0.06]"
+          sizes="(max-width: 1080px) calc(100vw - 144px), 936px"
+          priority
+        />
+        <figcaption className="sr-only">
+          Design export for Figma node 143:173008 — Stocks Explore three-panel
+          composition.
+        </figcaption>
+      </figure>
     </div>
   </motion.section>
 );
 
+/** 400px column → (1080 − 400) / 2 = 340px inset on full artboard */
+const columnShellClass =
+  "mx-auto w-full max-w-[1080px] px-6 sm:px-[72px] min-[1080px]:px-[340px]";
+
 const Context = () => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto"
-    style={{ paddingLeft: 340, paddingRight: 340 }}
-  >
-    <div className="w-[400px]">
+  <motion.section {...fadeIn} className={columnShellClass}>
+    <div className="w-full max-w-[400px]">
       <SectionLabel label="Context" />
       <div className="mt-[28px] flex flex-col gap-[32px]">
-        <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
-          Groww <em className="not-italic font-normal italic">grows</em> in transacting users every quarter.
-          {"\n"}Users came to Groww only to trade. Everything before that — the
-          research, the comparison, the decision — happened somewhere else.
+        <p className={`${cnBody} text-[#7f8283]`}>
+          Groww{" "}
+          <span className="italic">grows</span>
+          {" "}in transacting users every quarter. Users came to Groww only to
+          trade. Everything before that — the research, the comparison, the
+          decision — happened somewhere else.
         </p>
-        <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+        <p className={`${cnBody} text-[#7f8283]`}>
           To find out what was working on Groww for the users, we looked at the
           data and noticed:{" "}
-          <span className="font-semibold text-[#353839]">
+          <span className="font-groww-sans font-semibold text-[#353839]">
             60% of orders from Stocks Explore came from just two sections:
           </span>{" "}
           Top Market Movers and Most Bought on Stocks Explore.
@@ -104,7 +220,7 @@ const Context = () => (
       </div>
 
       <div className="mt-[32px]">
-        <p className="text-[14px] font-normal leading-[17px] text-[#7f8283] mb-[8px]">
+        <p className="font-groww-sans text-[14px] font-normal leading-[17px] text-[#7f8283] mb-[8px]">
           Most used sections on stocks explore
         </p>
         <div className="border border-[#e0e0e0] rounded-[12px] p-[16px] flex flex-col gap-[46px]">
@@ -118,10 +234,10 @@ const Context = () => (
           ].map((item) => (
             <div key={item.label}>
               <div className="flex items-center justify-between mb-[12px]">
-                <span className="text-[14px] leading-[18px] text-[#353839]">
+                <span className="font-groww-sans text-[14px] leading-[18px] text-[#353839]">
                   {item.label}
                 </span>
-                <span className="text-[14px] leading-[18px] text-[#353839]">
+                <span className="font-groww-sans text-[14px] leading-[18px] text-[#353839]">
                   {item.pct}
                 </span>
               </div>
@@ -144,22 +260,19 @@ const Context = () => (
 );
 
 const DataInsight = () => (
-  <motion.section
-    {...fadeIn}
-    className="bg-[#f7f7f7] py-[56px]"
-  >
-    <div className="max-w-[1080px] mx-auto" style={{ paddingLeft: 340, paddingRight: 340 }}>
-      <div className="w-[400px]">
+  <motion.section {...fadeIn} className="bg-[#f7f7f7] py-[56px]">
+    <div className={columnShellClass}>
+      <div className="w-full max-w-[400px]">
         <SectionLabel label="DATA insight" />
         <div className="mt-[28px] flex flex-col gap-[32px]">
-          <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+          <p className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
             This meant that the rest of the sections on stocks explore
             wasn&apos;t giving users enough reasons to scroll down, let alone
             interact.
           </p>
-          <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+          <p className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
             But the traffic was there:{" "}
-            <span className="font-semibold text-[#353839]">
+            <span className="font-groww-sans font-semibold text-[#353839]">
               2.8M users visit Explore every day — roughly 35% of app DAU.
             </span>{" "}
             There was a real opportunity: if we could make the rest of the page
@@ -169,18 +282,17 @@ const DataInsight = () => (
 
         <div className="mt-[56px] flex flex-col gap-[16px]">
           {[
-            { bold: "2.8M", rest: "daily explore visitors" },
-            { bold: "35%", rest: "of daily app DAU" },
-            { bold: "60%", rest: "orders from just 2 sections" },
-          ].map((item) => (
+            "2.8M daily explore visitors",
+            "35% of daily app DAU",
+            "60% orders from just 2 sections",
+          ].map((line) => (
             <div
-              key={item.bold}
-              className="bg-white rounded-tr-[8px] rounded-br-[8px] p-[16px] flex items-start"
+              key={line}
+              className="flex min-h-[51px] items-center rounded-tr-[8px] rounded-br-[8px] bg-white px-[16px] py-[16px]"
               style={{ borderLeft: "3px solid #c73a75" }}
             >
-              <p className="text-[14px] leading-[normal] text-[#353839]">
-                <span className="font-medium italic">{item.bold}</span>{" "}
-                <span className="italic text-[#7f8283]">{item.rest}</span>
+              <p className="font-groww-sans text-[14px] font-normal leading-[19px] text-[#353839]">
+                {line}
               </p>
             </div>
           ))}
@@ -191,41 +303,27 @@ const DataInsight = () => (
 );
 
 const CurrentState = () => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 340, paddingRight: 340 }}
-  >
-    <div className="w-[400px]">
+  <motion.section {...fadeIn} className={`${columnShellClass} py-0`}>
+    <div className="w-full max-w-[400px]">
       <SectionLabel label="Current state of stocks explore" />
       <div className="mt-[28px] flex flex-col gap-[32px]">
         <div className="flex flex-col gap-[16px]">
-          <h2
-            className="text-[16px] font-medium leading-[24px] text-[#353839]"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          >
+          <h2 className="font-case-inter font-medium text-[16px] leading-[24px] text-[#7f8283]">
             What the page looked like before
           </h2>
-          <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+          <p className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
             The existing Explore page had basic sections — Most Traded, Top
             Movers, Sectors, ETFs, and News. But they were all flat lists with
             minimal context.
           </p>
         </div>
-        <div
-          className="mx-auto rounded-[24px] overflow-hidden shadow-lg"
-          style={{ width: 199, height: 437 }}
-        >
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-            aria-label="Screen recording of the old Stocks Explore page"
-          >
-            <source src="/current-state-explore.mp4" type="video/mp4" />
-          </video>
+        <div className="mx-auto flex justify-center">
+          <ImageSlot
+            label="Screen recording or screenshot — previous Stocks Explore"
+            className="rounded-[24px] shadow-lg"
+            widthPx={199}
+            heightPx={437}
+          />
         </div>
       </div>
     </div>
@@ -233,23 +331,16 @@ const CurrentState = () => (
 );
 
 const Problem = () => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 340, paddingRight: 340 }}
-  >
-    <div className="w-[400px]">
+  <motion.section {...fadeIn} className={`${columnShellClass} py-0`}>
+    <div className="w-full max-w-[402px]">
       <SectionLabel label="problem" />
       <div className="mt-[28px] flex flex-col gap-[24px]">
-        <h2
-          className="text-[16px] font-medium leading-[24px] text-[#353839]"
-          style={{ fontFamily: "'Inter', sans-serif" }}
-        >
+        <h2 className="font-case-inter font-medium text-[16px] leading-[24px] text-[#7f8283]">
           Stock Explore was a dead-end — not a starting point
         </h2>
 
         <AccentCard borderColor="#ed5533">
-          <p className="text-[14px] font-normal italic leading-[normal] text-[#353839]">
+          <p className="font-groww-sans text-[14px] font-normal italic leading-[normal] text-[#353839]">
             We were missing users at the start of their journey. People
             weren&apos;t spending much time in the app — they were leaving to
             research elsewhere.
@@ -281,10 +372,12 @@ const Problem = () => (
           ].map((item) => (
             <p
               key={item.bold}
-              className="text-[14px] leading-[20px] text-[#7f8283]"
+              className="font-groww-sans text-[14px] leading-[20px] text-[#7f8283]"
             >
               <span className="text-[#7f8283]">{item.num} </span>
-              <span className="font-medium text-[#353839]">{item.bold}</span>
+              <span className="font-groww-sans font-medium text-[#353839]">
+                {item.bold}
+              </span>
               {item.rest}
             </p>
           ))}
@@ -295,14 +388,10 @@ const Problem = () => (
 );
 
 const Solution = () => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 340, paddingRight: 340 }}
-  >
-    <div className="w-[400px]">
+  <motion.section {...fadeIn} className={`${columnShellClass} py-0`}>
+    <div className="w-full max-w-[400px]">
       <SectionLabel label="solution" />
-      <p className="mt-[28px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
+      <p className="mt-[28px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
         We picked Stocks Explore and decided to add more collections because it
         was already the place users came to when they didn&apos;t know what to
         buy — it just wasn&apos;t doing its job. We decided to make a single
@@ -337,16 +426,12 @@ const UnderstandingUsers = () => (
     className="w-full bg-[#f7f7f7] pt-[56px] pb-[56px]"
   >
     <div className="mx-auto max-w-[1080px]">
-      {/* Frame 119:161421 — x 339, w 402 */}
-      <div className="pl-[339px]">
-        <div className="w-[402px]">
-          <h2
-            className="text-[16px] font-medium leading-[24px] text-[#353839]"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          >
+      <div className={`${columnShellClass} !max-w-[1080px] pb-6`}>
+        <div className="w-full max-w-[402px]">
+          <h2 className="font-case-inter font-medium text-[16px] leading-[24px] text-[#353839]">
             Understanding our users
           </h2>
-          <p className="mt-[16px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
+          <p className="mt-[16px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
             Groww has a wide mix of users — from someone placing their first trade to
             someone who lives on the charts. We grouped them into two broad types,
             with a few specific styles inside.
@@ -364,17 +449,14 @@ const UnderstandingUsers = () => (
             <div className="w-[360px] min-h-[182px] shrink-0 rounded-[16px] bg-white p-[24px] shadow-[0px_4px_24px_rgba(53,56,57,0.08)]">
               <p className="text-[30px] leading-[30px]">🤓</p>
               <div className="mt-[12px] max-w-[312px]">
-                <h3
-                  className="text-[16px] font-medium leading-[24px] text-[#353839]"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
+                <h3 className="font-case-inter font-medium text-[16px] leading-[24px] text-[#353839]">
                   Beginners
                 </h3>
                 <div className="mt-[12px] space-y-[12px]">
-                  <p className="text-[14px] font-normal italic leading-[20px] text-[#7f8283]">
+                  <p className="font-groww-sans text-[14px] font-normal italic leading-[20px] text-[#7f8283]">
                     New to investing.
                   </p>
-                  <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+                  <p className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
                     They don&apos;t know where to start, what to look for, or how to read
                     the market. They need ideas, not data.
                   </p>
@@ -385,17 +467,14 @@ const UnderstandingUsers = () => (
             <div className="w-[360px] min-h-[182px] shrink-0 rounded-[16px] bg-white p-[24px] shadow-[0px_4px_24px_rgba(53,56,57,0.08)]">
               <p className="text-[30px] leading-[30px]">🥸</p>
               <div className="mt-[12px] max-w-[312px]">
-                <h3
-                  className="text-[16px] font-medium leading-[24px] text-[#353839]"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
+                <h3 className="font-case-inter font-medium text-[16px] leading-[24px] text-[#353839]">
                   Experienced traders
                 </h3>
                 <div className="mt-[12px] space-y-[12px]">
-                  <p className="text-[14px] font-normal italic leading-[20px] text-[#7f8283]">
+                  <p className="font-groww-sans text-[14px] font-normal italic leading-[20px] text-[#7f8283]">
                     They know what they want.
                   </p>
-                  <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+                  <p className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
                     They have a strategy and just need quick access to the right
                     information to act on it
                   </p>
@@ -406,7 +485,7 @@ const UnderstandingUsers = () => (
 
           {/* Frame 119:161461 */}
           <div className="mt-[89px] ml-[655px] flex min-h-[28px] w-[180px] items-center rounded-[6px] bg-white px-[10px] py-[4px] shadow-[0px_2px_12px_rgba(53,56,57,0.06)]">
-            <p className="text-[14px] leading-[20px] text-[#7f8283] italic">
+            <p className="font-groww-sans text-[14px] italic leading-[20px] text-[#7f8283]">
               within experienced traders
             </p>
           </div>
@@ -436,10 +515,10 @@ const UnderstandingUsers = () => (
               >
                 <p className="text-[16px] leading-[16px]">{user.emoji}</p>
                 <div className="mt-[12px] max-w-[208px]">
-                  <h3 className="text-[14px] font-medium leading-[20px] text-[#353839]">
+                  <h3 className="font-case-inter font-medium text-[14px] leading-[20px] text-[#353839]">
                     {user.title}
                   </h3>
-                  <p className="mt-[8px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
+                  <p className="mt-[8px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
                     {user.desc}
                   </p>
                 </div>
@@ -453,19 +532,12 @@ const UnderstandingUsers = () => (
 );
 
 const WhatThisMeant = () => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 339, paddingRight: 339 }}
-  >
-    <div className="w-[402px] flex flex-col gap-[16px]">
-      <h2
-        className="text-[16px] font-medium leading-[24px] text-[#353839]"
-        style={{ fontFamily: "'Inter', sans-serif" }}
-      >
+  <motion.section {...fadeIn} className={`${columnShellClass} py-0`}>
+    <div className="flex w-full max-w-[402px] flex-col gap-[16px]">
+      <h2 className="font-case-inter font-medium text-[16px] leading-[24px] text-[#353839]">
         What this meant for design?
       </h2>
-      <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+      <p className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
         Each group needed something different on the same screen. So instead of
         one generic &quot;explore&quot; feed, we had to build separate
         collections — each one shaped around how that user actually thinks.
@@ -475,22 +547,15 @@ const WhatThisMeant = () => (
 );
 
 const IdealSolution = () => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 339, paddingRight: 339 }}
-  >
-    <div className="w-[402px] flex flex-col gap-[16px]">
+  <motion.section {...fadeIn} className={`${columnShellClass} py-0`}>
+    <div className="flex w-full max-w-[402px] flex-col gap-[16px]">
       <div>
         <p className="text-[32px] leading-[32px]">💡</p>
-        <h2
-          className="mt-[4px] text-[16px] font-medium leading-[24px] text-[#353839]"
-          style={{ fontFamily: "'Inter', sans-serif" }}
-        >
+        <h2 className="mt-[4px] font-case-inter font-medium text-[16px] leading-[24px] text-[#353839]">
           The ideal solution
         </h2>
       </div>
-      <div className="text-[14px] font-normal leading-[20px] text-[#7f8283] flex flex-col gap-[16px]">
+      <div className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283] flex flex-col gap-[16px]">
         <p>
           A fully personalised Stocks Explore, different for every user.
           In theory, we could take existing user data, analyse trading patterns,
@@ -510,14 +575,14 @@ const IdealSolution = () => (
 
       <AccentCard borderColor="#5669ff">
         <div className="flex flex-col gap-[8px]">
-          <p className="text-[14px] font-normal leading-[18px] text-[#353839]">
+          <p className="font-groww-sans text-[14px] font-normal leading-[18px] text-[#353839]">
             So we asked a simpler question first:
           </p>
-          <p className="text-[14px] font-semibold leading-[20px] text-[#353839]">
+          <p className="font-groww-sans text-[14px] font-semibold leading-[20px] text-[#353839]">
             If we added more, better collections to Stocks Explore — would users
             actually use them?
           </p>
-          <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+          <p className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
             That answer would tell us whether the demand was there before we
             committed to building something much bigger. New collections were our
             way to validate the need, and lay the foundation for personalisation
@@ -530,16 +595,9 @@ const IdealSolution = () => (
 );
 
 const DesignPhilosophies = () => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 339, paddingRight: 339 }}
-  >
-    <div className="w-[402px]">
-      <h2
-        className="text-[16px] font-medium leading-[24px] text-[#353839]"
-        style={{ fontFamily: "'Inter', sans-serif" }}
-      >
+  <motion.section {...fadeIn} className={`${columnShellClass} py-0`}>
+    <div className="w-full max-w-[402px]">
+      <h2 className="font-case-inter font-medium text-[16px] leading-[24px] text-[#353839]">
         Design philosophies to keep in mind
       </h2>
       <div className="mt-[32px] flex flex-col gap-[24px]">
@@ -566,8 +624,10 @@ const DesignPhilosophies = () => (
           },
         ].map((item) => (
           <AccentCard key={item.bold} borderColor="#5669ff">
-            <p className="text-[14px] leading-[20px] text-[#7f8283]">
-              <span className="font-medium text-[#353839]">{item.bold}</span>{" "}
+            <p className="font-groww-sans text-[14px] leading-[20px] text-[#7f8283]">
+              <span className="font-groww-sans font-medium text-[#353839]">
+                {item.bold}
+              </span>{" "}
               <span className="italic">{item.rest}</span>
             </p>
           </AccentCard>
@@ -577,23 +637,55 @@ const DesignPhilosophies = () => (
   </motion.section>
 );
 
-const NewCollections = () => (
+const collectionWideShellClass =
+  "mx-auto w-full max-w-[1080px] px-6 sm:px-[72px] min-[1080px]:px-[197px]";
+
+/** Intraday screener — Figma lead bitmap + coded title and body */
+const IntradayScreenerComposite = () => (
   <motion.section
     {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 340, paddingRight: 340 }}
+    className={`${collectionWideShellClass} mt-[56px] py-0`}
+    aria-labelledby="intraday-screener-showcase-heading"
   >
-    <div className="w-[400px]">
+    <div className="mx-auto w-full max-w-[441px] text-center">
+      <figure className="m-0 mb-8 w-full p-0">
+        <Image
+          src="/groww-intraday-screener-lead.png"
+          alt="Two strategy preview cards, Intraday screener row with funnel icon and chevron, and connector line."
+          width={INTRADAY_SCREENER_LEAD_W}
+          height={INTRADAY_SCREENER_LEAD_H}
+          className="mx-auto block h-auto w-full max-w-[441px] align-top"
+          sizes="(max-width: 441px) 100vw, 441px"
+          unoptimized
+        />
+      </figure>
+      <h2
+        id="intraday-screener-showcase-heading"
+        className="font-case-inter text-[18px] font-semibold leading-[26px] text-[#353839]"
+      >
+        Intraday screener
+      </h2>
+      <p className="font-groww-sans mt-4 text-[14px] font-normal leading-[22px] text-[#7f8283]">
+        We built a screener specially for intraday traders to give them the
+        technicals they use to find stocks.
+      </p>
+    </div>
+  </motion.section>
+);
+
+const NewCollections = () => (
+  <motion.section {...fadeIn} className={`${columnShellClass} py-0`}>
+    <div className="w-full max-w-[400px]">
       <p className="text-[40px] leading-[40px]">🥁</p>
       <div className="mt-[16px]">
         <SectionLabel label="new stocks explore collections" />
       </div>
       <div className="mt-[28px] flex flex-col gap-[16px]">
-        <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+        <p className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
           We wanted each collection to be unique and not look like a copy of
           another.
         </p>
-        <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+        <p className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
           We also made sure to show the right kind of information for each
           section — not just price and price change like we&apos;re doing in
           Most Bought and Top Movers today.
@@ -603,92 +695,88 @@ const NewCollections = () => (
   </motion.section>
 );
 
+type CollectionMockupImage = {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  /** Screen-reader note, e.g. Figma node id */
+  caption?: string;
+  /** Skip optimizer when exports show artifacts */
+  unoptimized?: boolean;
+  /** Appended to base Image classes */
+  imageClassName?: string;
+};
+
 type CollectionSectionProps = {
   number?: string;
   title: string;
   description: string;
-  /** When set, replaces the twin grey mock placeholders with this asset (e.g. Volume shockers flow). */
-  figureSrc?: string;
-  figureAlt?: string;
+  /** Single composite export from Figma — replaces the two phone placeholders */
+  mockupImage?: CollectionMockupImage;
 };
 
 const CollectionSection = ({
   number,
   title,
   description,
-  figureSrc,
-  figureAlt,
+  mockupImage,
 }: CollectionSectionProps) => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 197, paddingRight: 197 }}
-  >
-    <div className="mx-auto" style={{ width: 686 }}>
-      <div style={{ paddingLeft: 142 }}>
-        <div style={{ width: 402 }}>
-          <h3
-            className="text-[16px] font-medium leading-[24px] text-[#353839]"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          >
-            {number && <span>{number} </span>}
-            {title}
-          </h3>
-          <p className="mt-[16px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
-            {description}
-          </p>
-        </div>
+  <motion.section {...fadeIn} className={`${collectionWideShellClass} py-0`}>
+    <div className="mx-auto w-full max-w-[686px]">
+      <div className="mx-auto w-full max-w-[402px]">
+        <h3 className="font-case-inter font-medium text-[16px] leading-[24px] text-[#353839]">
+          {number ? <span>{number} </span> : null}
+          {title}
+        </h3>
+        <p className="mt-[16px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
+          {description}
+        </p>
       </div>
 
-      <div className="mt-[72px] flex justify-center gap-[68px]">
-        {figureSrc ? (
-          <figure className="m-0 w-full max-w-[686px] px-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={figureSrc}
-              alt={
-                figureAlt ??
-                "Mobile mockup illustrating this Explore collection."
-              }
-              width={1024}
-              height={906}
-              className="block h-auto w-full rounded-[12px]"
-              loading="lazy"
-              decoding="async"
-            />
-          </figure>
-        ) : (
-          <>
-            <div
-              className="rounded-[12px] bg-[#f7f7f7]"
-              style={{ width: 240, height: 520 }}
-            />
-            <div
-              className="rounded-[12px] bg-[#f7f7f7]"
-              style={{ width: 240, height: 520 }}
-            />
-          </>
-        )}
-      </div>
+      {!mockupImage ? (
+        <div className="mt-[72px] flex flex-wrap justify-center gap-x-[68px] gap-y-[24px]">
+          <ImageSlot
+            label={`${title} — screen mock A`}
+            widthPx={240}
+            heightPx={520}
+          />
+          <ImageSlot
+            label={`${title} — screen mock B`}
+            widthPx={240}
+            heightPx={520}
+          />
+        </div>
+      ) : null}
     </div>
+
+    {mockupImage ? (
+      <figure className="mt-[72px] mx-auto w-full max-w-[1024px] overflow-hidden bg-transparent">
+        <Image
+          src={mockupImage.src}
+          alt={mockupImage.alt}
+          width={mockupImage.width}
+          height={mockupImage.height}
+          className={`block h-auto w-full align-top ring-1 ring-inset ring-black/[0.06] ${mockupImage.imageClassName ?? ""}`}
+          sizes="(max-width: 1080px) calc(100vw - 48px), 1024px"
+          unoptimized={mockupImage.unoptimized === true}
+        />
+        {mockupImage.caption ? (
+          <figcaption className="sr-only">{mockupImage.caption}</figcaption>
+        ) : null}
+      </figure>
+    ) : null}
   </motion.section>
 );
 
 const SectorCollection = () => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 72, paddingRight: 72 }}
-  >
-    <div className="mx-auto" style={{ width: 937 }}>
-      <div className="mx-auto" style={{ width: 402 }}>
-        <h3
-          className="text-[16px] font-medium leading-[24px] text-[#353839]"
-          style={{ fontFamily: "'Inter', sans-serif" }}
-        >
+  <motion.section {...fadeIn} className={`${collectionWideShellClass} py-0`}>
+    <div className="mx-auto w-full max-w-[686px]">
+      <div className="mx-auto w-full max-w-[402px]">
+        <h3 className="font-case-inter font-medium text-[16px] leading-[24px] text-[#353839]">
           Sector based collections
         </h3>
-        <p className="mt-[16px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
+        <p className="mt-[16px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
           Real advance/decline ratios, not just price changes. Users see how many
           stocks in a sector are up vs down, with visual indicators. On the main
           page, we only show the top 2 best-performing sectors and top 2
@@ -698,39 +786,32 @@ const SectorCollection = () => (
         </p>
       </div>
 
-      <div className="mt-[72px] flex justify-center gap-[68px]">
-        <div
-          className="rounded-[12px] bg-[#f7f7f7]"
-          style={{ width: 240, height: 520 }}
+      <figure className="mt-[72px] mx-auto w-full max-w-[1024px] overflow-hidden bg-transparent">
+        <Image
+          src="/groww-sector-navigation-flow.png"
+          alt="Sector discovery flow: Sectors trending today widget with top gainers and losers; All sectors list sorted by one-day price change with sector and sub-sector tabs; Pharma sector detail with stock list, sparklines, and sort filters"
+          width={SECTOR_NAV_FLOW_W}
+          height={SECTOR_NAV_FLOW_H}
+          className="mx-auto block h-auto w-full max-w-[641px] align-top ring-1 ring-inset ring-black/[0.06]"
+          sizes="(max-width: 720px) calc(100vw - 48px), 641px"
         />
-        <div
-          className="rounded-[12px] bg-[#f7f7f7]"
-          style={{ width: 240, height: 520 }}
-        />
-        <div
-          className="rounded-[12px] bg-[#f7f7f7]"
-          style={{ width: 240, height: 520 }}
-        />
-      </div>
+        <figcaption className="sr-only">
+          Three-screen composite: explore widget, full sector directory, and
+          sector-specific stock screen.
+        </figcaption>
+      </figure>
     </div>
   </motion.section>
 );
 
 const NewsRedesign = () => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 197, paddingRight: 197 }}
-  >
-    <div className="mx-auto" style={{ width: 565 }}>
-      <div className="mx-auto" style={{ width: 402 }}>
-        <h3
-          className="text-[16px] font-medium leading-[24px] text-[#353839]"
-          style={{ fontFamily: "'Inter', sans-serif" }}
-        >
+  <motion.section {...fadeIn} className={`${collectionWideShellClass} py-0`}>
+    <div className="mx-auto w-full max-w-[686px]">
+      <div className="mx-auto w-full max-w-[402px]">
+        <h3 className="font-case-inter font-medium text-[16px] leading-[24px] text-[#353839]">
           News based - redesign
         </h3>
-        <p className="mt-[16px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
+        <p className="mt-[16px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
           Not just &apos;Stock X is trending&apos; — show the headline, the
           impact, and whether the news is positive or negative for the stock.
           Giving just the stocks when they are trending in news makes it bland —
@@ -740,58 +821,53 @@ const NewsRedesign = () => (
         </p>
       </div>
 
-      <div className="mt-[72px] flex justify-center gap-[68px]">
-        <div
-          className="rounded-[12px] bg-[#f7f7f7]"
-          style={{ width: 240, height: 520 }}
+      <figure className="mt-[72px] mx-auto w-full max-w-[1024px] overflow-hidden bg-transparent">
+        <Image
+          src="/groww-stocks-in-news-old-new.png"
+          alt="Stocks in news comparison: old design with a two-by-two grid of stock tiles showing logos, prices, and price changes; new design with a vertical list of entries showing company, percent change, news summary, and source with time"
+          width={STOCKS_IN_NEWS_OLD_NEW_W}
+          height={STOCKS_IN_NEWS_OLD_NEW_H}
+          className="block h-auto w-full align-top ring-1 ring-inset ring-black/[0.06]"
+          sizes="(max-width: 1080px) calc(100vw - 48px), 1024px"
         />
-        <div
-          className="rounded-[12px] bg-[#f7f7f7]"
-          style={{ width: 240, height: 520 }}
-        />
-      </div>
+        <figcaption className="sr-only">
+          Side-by-side old and new Stocks in news UI on a blurred app background.
+        </figcaption>
+      </figure>
     </div>
   </motion.section>
 );
 
 const FinalLook = () => (
-  <motion.section
-    {...fadeIn}
-    className="bg-[#f7f7f7] py-[56px]"
-  >
-    <div className="max-w-[1080px] mx-auto" style={{ paddingLeft: 340, paddingRight: 340 }}>
-      <div className="w-[400px]">
+  <motion.section {...fadeIn} className="bg-[#f7f7f7] py-[56px]">
+    <div className={columnShellClass}>
+      <div className="w-full max-w-[400px]">
         <SectionLabel label="Final Look" />
-        <h2
-          className="mt-[16px] text-[16px] font-medium leading-[24px] text-[#353839] italic"
-          style={{ fontFamily: "'Inter', sans-serif" }}
-        >
+        <h2 className="font-case-inter mt-[16px] text-[16px] font-medium italic leading-[24px] text-[#353839]">
           The redesigned Explore
         </h2>
-        <p className="mt-[16px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
+        <p className="mt-[16px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
           Our aim was to give enough useful information without making it too
           complicated. Each section had its own look and showed specific data.
         </p>
       </div>
     </div>
-    <div className="max-w-[1080px] mx-auto flex justify-center mt-[40px]">
-      <div
-        className="rounded-[12px] bg-white"
-        style={{ width: 200, height: 444 }}
+    <div className="mx-auto mt-[40px] flex max-w-[1080px] justify-center px-6 sm:px-[72px]">
+      <ImageSlot
+        label="Final Explore — hero device mock"
+        className="bg-white"
+        widthPx={200}
+        heightPx={444}
       />
     </div>
   </motion.section>
 );
 
 const TestingRollout = () => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 340, paddingRight: 340 }}
-  >
-    <div className="w-[400px]">
+  <motion.section {...fadeIn} className={`${columnShellClass} py-0`}>
+    <div className="w-full max-w-[400px]">
       <SectionLabel label="Testing & Rollout" />
-      <p className="mt-[28px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
+      <p className="mt-[28px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
         We first tested with an internal roll out, then after the green flag,
         we eventually rolled it out to 100% users.
       </p>
@@ -817,7 +893,7 @@ const TestingRollout = () => (
               >
                 {step.num}
               </div>
-              <span className="text-[12px] leading-[14px] text-[#7f8283] whitespace-nowrap">
+              <span className="font-groww-sans text-[12px] leading-[14px] text-[#7f8283] whitespace-nowrap">
                 {step.label}
               </span>
             </div>
@@ -829,14 +905,10 @@ const TestingRollout = () => (
 );
 
 const Results = () => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 340, paddingRight: 340 }}
-  >
-    <div className="w-[400px]">
+  <motion.section {...fadeIn} className={`${columnShellClass} py-0`}>
+    <div className="w-full max-w-[400px]">
       <SectionLabel label="THE RESULT" />
-      <p className="mt-[28px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
+      <p className="mt-[28px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
         The redesign turned a high-traffic surface into a real
         research-to-trade destination — more visits, deeper exploration, and a
         clear lift in revenue.
@@ -846,37 +918,37 @@ const Results = () => (
         {/* For users */}
         <div>
           <p className="text-[24px] leading-[24px]">👤</p>
-          <p className="mt-[8px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
+          <p className="mt-[8px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
             For users
           </p>
         </div>
 
         <div className="flex flex-col gap-[24px]">
           <div>
-            <h3 className="text-[14px] font-semibold leading-[20px] text-[#353839]">
+            <h3 className="font-groww-sans text-[14px] font-semibold leading-[20px] text-[#353839]">
               Faster discovery
             </h3>
-            <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+            <p className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
               2.8M users open Explore every day — roughly 35% of app DAU —
               and now find what they need without leaving the app.
             </p>
           </div>
 
           <div>
-            <h3 className="text-[14px] font-semibold leading-[20px] text-[#353839]">
+            <h3 className="font-groww-sans text-[14px] font-semibold leading-[20px] text-[#353839]">
               Right depth for every user
             </h3>
-            <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+            <p className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
               Beginners get curated sectors, pros get strategy-based collections,
               and intraday traders get volume signals — all on the same screen.
             </p>
           </div>
 
           <div>
-            <h3 className="text-[14px] font-semibold leading-[20px] text-[#353839]">
+            <h3 className="font-groww-sans text-[14px] font-semibold leading-[20px] text-[#353839]">
               From idea to order, in fewer taps
             </h3>
-            <p className="text-[14px] font-normal leading-[20px] text-[#7f8283]">
+            <p className="font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
               Search-to-order and watchlist-to-order paths got noticeably
               shorter, removing friction between &quot;interesting&quot; and
               &quot;ordered.&quot;
@@ -887,10 +959,10 @@ const Results = () => (
         {/* For the business */}
         <div className="mt-[16px]">
           <p className="text-[24px] leading-[24px]">📈</p>
-          <p className="mt-[8px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
+          <p className="mt-[8px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
             For the business
           </p>
-          <p className="mt-[16px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
+          <p className="mt-[16px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
             Higher engagement compounding into revenue — across orders,
             brokerage, and turnover.
           </p>
@@ -900,12 +972,12 @@ const Results = () => (
         <div className="border border-[#e0e0e0] rounded-[8px] overflow-hidden">
           <div className="flex bg-[#f7f7f7]">
             <div className="flex-1 px-[16px] py-[12px]">
-              <span className="text-[14px] font-medium leading-[20px] text-[#353839]">
+              <span className="font-case-inter font-medium text-[14px] leading-[20px] text-[#353839]">
                 Metric
               </span>
             </div>
             <div className="w-[79px] px-[16px] py-[12px] text-right">
-              <span className="text-[14px] font-medium leading-[20px] text-[#353839]">
+              <span className="font-case-inter font-medium text-[14px] leading-[20px] text-[#353839]">
                 Lift
               </span>
             </div>
@@ -924,12 +996,12 @@ const Results = () => (
               className="flex border-t border-[#e0e0e0]"
             >
               <div className="flex-1 px-[16px] py-[12px]">
-                <span className="text-[14px] leading-[20px] text-[#353839]">
+                <span className="font-groww-sans text-[14px] leading-[20px] text-[#353839]">
                   {row.metric}
                 </span>
               </div>
               <div className="w-[79px] px-[16px] py-[12px] text-right">
-                <span className="text-[14px] leading-[20px] text-[#00B386] font-medium">
+                <span className="font-groww-sans text-[14px] font-medium leading-[20px] text-[#00B386]">
                   {row.lift}
                 </span>
               </div>
@@ -940,10 +1012,10 @@ const Results = () => (
         {/* Standout */}
         <AccentCard borderColor="#00B386">
           <div className="flex flex-col gap-[8px]">
-            <p className="text-[14px] font-semibold leading-[18px] text-[#353839]">
+            <p className="font-groww-sans text-[14px] font-semibold leading-[18px] text-[#353839]">
               The standout
             </p>
-            <p className="text-[14px] font-normal italic leading-[20px] text-[#7f8283]">
+            <p className="font-groww-sans text-[14px] font-normal italic leading-[20px] text-[#7f8283]">
               MTF trading jumped{" "}
               <span className="text-[#00B386] font-medium">+19.6%</span> — the
               biggest signal that experienced traders were acting on the new
@@ -958,14 +1030,10 @@ const Results = () => (
 );
 
 const FutureScope = () => (
-  <motion.section
-    {...fadeIn}
-    className="max-w-[1080px] mx-auto py-0"
-    style={{ paddingLeft: 340, paddingRight: 340 }}
-  >
-    <div className="w-[400px]">
+  <motion.section {...fadeIn} className={`${columnShellClass} py-0`}>
+    <div className="w-full max-w-[400px]">
       <SectionLabel label="future scope" />
-      <p className="mt-[28px] text-[14px] font-normal leading-[20px] text-[#7f8283]">
+      <p className="mt-[28px] font-groww-sans text-[14px] font-normal leading-[20px] text-[#7f8283]">
         Based on the data we&apos;ll get from these collections, we&apos;ll work
         on building profiles for every user and will give them more personalised
         sections on explore
@@ -996,10 +1064,12 @@ const FutureScope = () => (
         ].map((item) => (
           <p
             key={item.bold}
-            className="text-[14px] leading-[20px] text-[#7f8283]"
+            className="font-groww-sans text-[14px] leading-[20px] text-[#7f8283]"
           >
             <span>{item.num} </span>
-            <span className="font-medium text-[#353839]">{item.bold}</span>
+            <span className="font-groww-sans font-medium text-[#353839]">
+              {item.bold}
+            </span>
             {item.rest}
           </p>
         ))}
@@ -1013,7 +1083,7 @@ const Footer = () => (
     <div className="max-w-[1080px] mx-auto px-[72px] py-[40px] text-center">
       <Link
         href="/"
-        className="inline-flex items-center gap-2 text-[14px] text-[#7f8283] hover:text-[#353839] transition-colors"
+        className="font-case-inter inline-flex items-center gap-2 text-[14px] text-[#7f8283] hover:text-[#353839] transition-colors"
         aria-label="Back to all case studies"
       >
         <svg
@@ -1092,8 +1162,16 @@ const GrowwStocksExplore = () => (
         number="1."
         title="Volume based"
         description="Instead of just showing stock prices, we focused on how much trading volume happened today compared to the average. Intraday users look at these stocks to find sudden big spikes — they don't care about just the price."
-        figureSrc="/groww-volume-shockers-flow.png"
-        figureAlt="Volume shockers collection: bottom sheet listing stocks above weekly average volume with See more, and full-screen list with sparklines and volume versus one-week average."
+        mockupImage={{
+          src: "/groww-volume-shockers-143-173221.png",
+          width: VOLUME_FIGMA_143_173221_W,
+          height: VOLUME_FIGMA_143_173221_H,
+          alt: "Volume shockers: home widget with top three stocks above weekly average volume and See more, plus full list with sparklines and 1W avg versus 1D volume toggle",
+          caption:
+            "Figma 143:173221 — Volume shockers summary and dedicated page with quick data view toggle.",
+          unoptimized: true,
+          imageClassName: "bg-[#f4f7ec] ring-0",
+        }}
       />
     </div>
 
@@ -1105,14 +1183,19 @@ const GrowwStocksExplore = () => (
       number="2."
       title="Technicals based"
       description='We decided to show the names of popular strategies (like "RSI" or "Breakouts") first. Users could then click on a strategy to see the stocks related to it. This way, users can pick a strategy they understand first, instead of being overwhelmed by a list of random stock names.'
+      mockupImage={{
+        src: "/groww-technicals-screener-mock.png",
+        width: TECHNICALS_SCREENER_MOCK_W,
+        height: TECHNICALS_SCREENER_MOCK_H,
+        alt: "Trading screens: strategy grid with bullish and bearish signals, intraday screener row, and dedicated stocks-near-breakout list with filters",
+        caption:
+          "Trading screens modal and strategy detail — pale workspace background.",
+      }}
     />
 
-    <div className="mt-[56px]">
-      <CollectionSection
-        title="Intraday screener"
-        description="We built a screener specially for intraday traders to give them the technicals they use to find stocks."
-      />
-    </div>
+    <IntradayScreenerComposite />
+
+    <IntradayFilterScreensMarquee slides={intradayFilterMarqueeSlides} />
 
     <div className="mt-[56px]">
       <SectorCollection />

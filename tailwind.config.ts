@@ -8,8 +8,29 @@ export default {
   ],
   theme: {
     extend: {
+      keyframes: {
+        "intraday-filters-marquee": {
+          from: { transform: "translate3d(0, 0, 0)" },
+          to: { transform: "translate3d(-50%, 0, 0)" },
+        },
+      },
+      animation: {
+        "intraday-filters-marquee":
+          "intraday-filters-marquee 52s linear infinite",
+      },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        /** Figma: PP Neue Bit Bold — nav chrome (nodes 143:173012, 143:173013) */
+        "pp-neue-bit": ["var(--font-pp-neue-bit)", "monospace"],
+        /** Figma: Groww Sans Variable — body (e.g. 143:173049) */
+        "groww-sans": ["var(--font-groww-sans)", "sans-serif"],
+        /** Figma: PP Fragment Glare Regular — display hero (143:173019) */
+        "fragment-glare": ["var(--font-pp-fragment-glare)", "sans-serif"],
+        /**
+         * Figma: Sohne Kräftig for eyebrows + heading-small (500).
+         * Inter 500 is used until licensed Sohne files are added under src/fonts/sohne/.
+         */
+        "case-inter": ["var(--font-case-inter)", "sans-serif"],
       },
       colors: {
         background: "var(--background)",

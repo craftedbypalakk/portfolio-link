@@ -7,17 +7,19 @@ const CORRECT_PASSWORD = "palak-work-2026";
 
 const AuthGate = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
 
   useEffect(() => {
-    const stored = sessionStorage.getItem(STORAGE_KEY);
-    if (stored === "true") {
-      setIsAuthenticated(true);
+    try {
+      const stored = sessionStorage.getItem(STORAGE_KEY);
+      if (stored === "true") {
+        setIsAuthenticated(true);
+      }
+    } catch {
+      /* sessionStorage unavailable (e.g. locked storage) — stay on gate */
     }
-    setIsLoading(false);
   }, []);
 
   const handleSubmit = useCallback(
@@ -44,14 +46,6 @@ const AuthGate = ({ children }: { children: ReactNode }) => {
     },
     [handleSubmit]
   );
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
-        <div className="h-5 w-5 animate-spin rounded-full border-2 border-zinc-200 border-t-zinc-600" />
-      </div>
-    );
-  }
 
   if (isAuthenticated) {
     return <>{children}</>;
