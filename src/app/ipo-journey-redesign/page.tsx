@@ -1,7 +1,45 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useState } from "react";
+
+/** IPO Journey intro banner — exported wide hero (maintain intrinsic ratio in layout). */
+const IPO_INTRO_IMAGE_W = 1024;
+const IPO_INTRO_IMAGE_H = 393;
+
+/** Figma Case-studies — Transparency at every step (frame node 143:217077). Phone exports 525×1024. */
+const IPO_TRANSPARENCY_PHONE_W = 525;
+const IPO_TRANSPARENCY_PHONE_H = 1024;
+const IPO_TRANSPARENCY_OVERVIEW_W = 588;
+const IPO_TRANSPARENCY_OVERVIEW_H = 1024;
+
+const cnIpoTransparencyFigure =
+  "overflow-hidden rounded-none bg-white ring-1 ring-inset ring-black/[0.06]";
+
+type IpoTransparencyPhoneProps = {
+  src: string;
+  alt: string;
+  sizes?: string;
+};
+
+const IpoTransparencyPhone = ({
+  src,
+  alt,
+  sizes = "(max-width: 640px) 42vw, 262px",
+}: IpoTransparencyPhoneProps) => (
+  <figure className={cnIpoTransparencyFigure}>
+    <Image
+      src={src}
+      alt={alt}
+      width={IPO_TRANSPARENCY_PHONE_W}
+      height={IPO_TRANSPARENCY_PHONE_H}
+      className="block h-auto w-full align-top"
+      sizes={sizes}
+    />
+  </figure>
+);
 
 /** Figma Case-studies — IPO frame node 143:219327; 400px column, symmetric 340px inset ≥1080 */
 const columnShellClass =
@@ -15,12 +53,94 @@ const fadeUp = {
   transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const },
 };
 
+/** Figma heading/✺ eyebrow — Söhne Kräftig 500, 10/12, +2 tracking; content secondary #7f8283 */
 const cnEyebrow =
-  "font-case-inter font-medium uppercase tracking-[2px] text-[10px] leading-[12px] text-[#6B7280]";
-const cnInterMeta =
-  "font-case-inter text-[12px] font-normal leading-normal text-[#353839]";
+  "font-sohne font-medium uppercase tracking-[2px] text-[10px] leading-[12px] text-[#7f8283]";
+/** Figma heading-small — Söhne Kräftig 500, 16/24 (e.g. 143:216630) */
+const cnHeadingSohne =
+  "font-sohne font-medium text-[16px] leading-[24px] text-[#353839]";
+/** Söhne labels at 14px — journey cards, quote headings (same family as part titles, smaller size) */
+const cnLabelSohne14 =
+  "font-sohne font-medium text-[14px] leading-[18px] text-[#353839]";
+/** Body copy — Groww Sans 14/20; primary text color matches Figma content primary */
 const cnBody =
-  "font-groww-sans text-[14px] font-normal leading-[20px] text-[#374151]";
+  "font-groww-sans text-[14px] font-normal leading-[20px] text-[#353839]";
+
+/** Figma Case-studies — square New / Old segmented control (frame 143:203789). */
+type IpoNewOld = "new" | "old";
+
+type IpoNewOldSegmentedProps = {
+  value: IpoNewOld;
+  onChange: (value: IpoNewOld) => void;
+  ariaLabel?: string;
+  className?: string;
+};
+
+const IpoNewOldSegmented = ({
+  value,
+  onChange,
+  ariaLabel = "Design comparison",
+  className = "",
+}: IpoNewOldSegmentedProps) => (
+  <div
+    className={`flex justify-center ${className}`}
+    role="radiogroup"
+    aria-label={ariaLabel}
+  >
+    <div className="flex w-full max-w-[200px] overflow-hidden rounded-none border border-[#E5E7EB] sm:max-w-[220px]">
+      <button
+        type="button"
+        role="radio"
+        aria-checked={value === "new"}
+        className={`flex min-h-[40px] flex-1 items-center justify-center px-4 py-2 font-groww-sans text-[14px] font-medium leading-[20px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#222831] focus-visible:ring-offset-2 ${
+          value === "new"
+            ? "bg-[#222831] text-white"
+            : "bg-white text-[#7f8283]"
+        }`}
+        onClick={() => onChange("new")}
+      >
+        New
+      </button>
+      <button
+        type="button"
+        role="radio"
+        aria-checked={value === "old"}
+        className={`flex min-h-[40px] flex-1 items-center justify-center border-l border-[#E5E7EB] px-4 py-2 font-groww-sans text-[14px] font-medium leading-[20px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#222831] focus-visible:ring-offset-2 ${
+          value === "old"
+            ? "bg-[#222831] text-white"
+            : "bg-white text-[#7f8283]"
+        }`}
+        onClick={() => onChange("old")}
+      >
+        Old
+      </button>
+    </div>
+  </div>
+);
+
+/** Part 1 — listing comparison area; screenshots added when assets are ready. */
+const Part1ListingFigma143203789 = () => {
+  const [version, setVersion] = useState<IpoNewOld>("new");
+
+  return (
+    <div className="relative mx-auto mt-8 w-full max-w-[712px] min-[1080px]:-left-[156px] min-[1080px]:mx-0 min-[1080px]:w-[712px] min-[1080px]:max-w-none">
+      <IpoNewOldSegmented
+        value={version}
+        onChange={setVersion}
+        ariaLabel="Listing design version"
+      />
+      <div
+        className="mt-6 min-h-[413px] w-full rounded-none border border-[#E5E7EB] bg-[#FAFAFA]"
+        role="region"
+        aria-label={
+          version === "new"
+            ? "New IPO listing design — images pending"
+            : "Previous IPO listing design — images pending"
+        }
+      />
+    </div>
+  );
+};
 
 const TopBar = () => (
   <header className="sticky top-0 z-50 border-b border-[#e5e7eb] bg-white">
@@ -61,49 +181,56 @@ const TopBar = () => (
 
 const HeroSection = () => (
   <motion.section
-    {...fadeUp}
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{
+      duration: 0.5,
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
+    }}
     className="mx-auto max-w-[1080px] px-6 pb-0 pt-[36px] sm:px-[72px]"
     aria-labelledby="ipo-hero-heading"
   >
     <div className="w-full max-w-[936px]">
       <h1
         id="ipo-hero-heading"
-        className="font-fragment-glare text-[36px] font-normal leading-tight tracking-normal text-[#1F2937] sm:text-[48px]"
+        className="font-fragment-glare text-[48px] font-normal leading-normal text-[#353839]"
       >
         IPO Journey Redesign
       </h1>
-      <p
-        className={`font-case-inter mt-2 max-w-[936px] text-[14px] font-normal leading-normal text-[#6B7280]`}
-      >
+      <p className="font-case-inter mt-2 max-w-[936px] text-[14px] font-normal leading-normal text-[#7f8283]">
         Making IPO investing simpler, faster, and more transparent
       </p>
 
-      <div className="mt-8 flex flex-wrap items-start justify-between gap-y-[16px]">
+      <div className="mt-14 flex flex-wrap items-start justify-between gap-y-5">
         <div className="min-w-[140px] shrink-0">
-          <p className="font-case-inter text-[10px] font-medium uppercase leading-[12px] tracking-[2px] text-[#7f8283]">
+          <p className="font-sohne text-[10px] font-medium uppercase leading-[12px] tracking-[2px] text-[#7f8283]">
             Role
           </p>
-          <p className={`${cnInterMeta} mt-1 text-[#1F2937]`}>Product designer</p>
+          <p className="font-case-inter mt-1 text-[12px] font-normal leading-normal text-[#353839]">
+            Product designer
+          </p>
         </div>
-        <div className="max-w-[300px] shrink-0 text-left sm:ml-auto sm:text-right">
-          <p className="font-case-inter text-[10px] font-medium uppercase leading-[12px] tracking-[2px] text-[#7f8283]">
+        <div className="max-w-[min(100%,420px)] shrink-0 text-left sm:ml-auto sm:text-right">
+          <p className="font-sohne text-[10px] font-medium uppercase leading-[12px] tracking-[2px] text-[#7f8283]">
             Team
           </p>
-          <p
-            className={`${cnInterMeta} mt-1 text-right text-[#1F2937] sm:text-right`}
-          >
+          <p className="font-case-inter mt-1 text-left text-[12px] font-normal leading-normal text-[#353839] sm:text-right">
             1 Product designer, 1 Product Manager, 2 Developers
           </p>
         </div>
       </div>
 
-      {/* Hero media — swap for Next/Image when asset is supplied */}
-      <div
-        className="relative mt-[40px] w-full overflow-hidden rounded-[12px] bg-[#f0f0f0] ring-1 ring-inset ring-black/[0.06]"
-        style={{ height: "360px", maxWidth: "936px" }}
-        role="img"
-        aria-label="IPO Journey hero visual placeholder"
-      />
+      <figure className="relative mt-[40px] w-full max-w-[936px] overflow-hidden bg-[#0f172a] ring-1 ring-inset ring-black/[0.06]">
+        <Image
+          src="/ipo-journey-intro.png"
+          alt="IPO journey intro: decorative Groww allotment certificate with flowers on a blue background, representing clarity after IPO application"
+          width={IPO_INTRO_IMAGE_W}
+          height={IPO_INTRO_IMAGE_H}
+          className="block h-auto w-full align-top"
+          sizes="(max-width: 1080px) calc(100vw - 144px), 936px"
+          priority
+        />
+      </figure>
     </div>
   </motion.section>
 );
@@ -165,7 +292,7 @@ const NumberedItem = ({ number, text }: NumberedItemProps) => (
       style={{ width: "20px", height: "20px" }}
     >
       <span
-        className="text-[#6B7280] font-medium font-groww-sans"
+        className="font-groww-sans font-medium text-[#7f8283]"
         style={{ fontSize: "12px" }}
       >
         {number}
@@ -189,41 +316,28 @@ const QuoteCard = ({ children }: QuoteCardProps) => (
   </div>
 );
 
-type NewOldToggleProps = {
-  className?: string;
-};
+const Part2OrderCardComparison = () => {
+  const [version, setVersion] = useState<IpoNewOld>("new");
 
-const NewOldToggle = ({ className = "" }: NewOldToggleProps) => (
-  <div className={`flex items-center justify-center ${className}`}>
-    <div
-      className="flex rounded-full border border-[#E5E7EB] overflow-hidden"
-      style={{ height: "34px" }}
-    >
+  return (
+    <div className="mx-auto mt-10 w-[344px] max-w-full">
+      <IpoNewOldSegmented
+        value={version}
+        onChange={setVersion}
+        ariaLabel="Order card design version"
+      />
       <div
-        className="flex items-center justify-center bg-[#1F2937] text-white rounded-full font-groww-sans"
-        style={{
-          width: "56px",
-          height: "26px",
-          margin: "4px",
-          fontSize: "14px",
-        }}
-      >
-        New
-      </div>
-      <div
-        className="flex items-center justify-center text-[#6B7280] font-groww-sans"
-        style={{
-          width: "56px",
-          height: "26px",
-          margin: "4px",
-          fontSize: "14px",
-        }}
-      >
-        Old
-      </div>
+        className="mt-8 h-[422px] w-full rounded-none border border-[#E5E7EB] bg-[#EEEEEE]"
+        role="region"
+        aria-label={
+          version === "new"
+            ? "New order card screens — images pending"
+            : "Previous order card screens — images pending"
+        }
+      />
     </div>
-  </div>
-);
+  );
+};
 
 const SectionHeadingSmall = ({
   label,
@@ -234,9 +348,7 @@ const SectionHeadingSmall = ({
 }) => (
   <>
     <p className={cnEyebrow}>{label}</p>
-    <h2 className="font-groww-sans mt-2 text-[18px] font-semibold leading-[24px] text-[#1F2937]">
-      {title}
-    </h2>
+    <h2 className={`${cnHeadingSohne} mt-2`}>{title}</h2>
   </>
 );
 
@@ -260,13 +372,13 @@ const ContextSection = () => (
     <div
       className="mt-[32px] w-full max-w-[576px] rounded-lg bg-[#F9FAFB] p-4 min-[1080px]:-ml-[88px]"
     >
-      <p className={`${cnBody} font-medium leading-[18px]`}>
+      <p className={`${cnBody} font-medium`}>
         We redesigned the end to end IPO journey across:
       </p>
       <div className="mt-4 flex flex-wrap items-center gap-4">
         <div className="w-[144px] rounded-md border border-[#E5E7EB] bg-white p-3">
-          <p className={`${cnBody} font-medium leading-[18px]`}>Listing Page</p>
-          <p className="mt-1 text-[14px] leading-[18px] text-[#9CA3AF] font-groww-sans">
+          <p className={cnLabelSohne14}>Listing Page</p>
+          <p className="mt-1 text-[14px] leading-[18px] text-[#7f8283] font-groww-sans">
             Discovery
           </p>
         </div>
@@ -281,8 +393,8 @@ const ContextSection = () => (
           />
         </svg>
         <div className="w-[144px] rounded-md border border-[#E5E7EB] bg-white p-3">
-          <p className={`${cnBody} font-medium leading-[18px]`}>Order Card</p>
-          <p className="mt-1 text-[14px] leading-[18px] text-[#9CA3AF] font-groww-sans">
+          <p className={cnLabelSohne14}>Order Card</p>
+          <p className="mt-1 text-[14px] leading-[18px] text-[#7f8283] font-groww-sans">
             Conversion
           </p>
         </div>
@@ -297,8 +409,8 @@ const ContextSection = () => (
           />
         </svg>
         <div className="w-[144px] rounded-md border border-[#E5E7EB] bg-white p-3">
-          <p className={`${cnBody} font-medium leading-[18px]`}>Status Page</p>
-          <p className="mt-1 text-[14px] leading-[18px] text-[#9CA3AF] font-groww-sans">
+          <p className={cnLabelSohne14}>Status Page</p>
+          <p className="mt-1 text-[14px] leading-[18px] text-[#7f8283] font-groww-sans">
             Post-application clarity
           </p>
         </div>
@@ -334,9 +446,7 @@ const PartSection = ({
     </div>
 
     <div className="mt-10">
-      <p className="font-groww-sans text-[18px] font-semibold leading-[24px] text-[#1F2937]">
-        🎯 Goal
-      </p>
+      <p className={cnHeadingSohne}>🎯 Goal</p>
       <p className={`${cnBody} mt-2`}>{goalText}</p>
     </div>
 
@@ -345,9 +455,7 @@ const PartSection = ({
     </div>
 
     <div className="mt-10">
-      <p className="font-groww-sans text-[18px] font-semibold leading-[24px] text-[#1F2937]">
-        Solution
-      </p>
+      <p className={cnHeadingSohne}>Solution</p>
       <div className="mt-2">{solutionContent}</div>
     </div>
 
@@ -361,7 +469,7 @@ const Part1Discovery = () => (
     title="Listing Page — From clutter to clarity"
     problemContent={
       <QuoteCard>
-        <p className={`${cnBody} font-semibold text-[#1F2937]`}>Problem</p>
+        <p className="font-sohne text-[14px] font-semibold leading-[20px] text-[#353839]">Problem</p>
         <div className="mt-2 space-y-2">
           <p className={cnBody}>
             <span className="font-semibold">
@@ -394,21 +502,12 @@ const Part1Discovery = () => (
           <CheckItem text="Each tab shows only relevant information" />
           <CheckItem text="Introduced Past Applications section" />
         </div>
-        <div className="relative mx-auto mt-8 w-full max-w-[712px] min-[1080px]:-left-[156px] min-[1080px]:mx-0 min-[1080px]:w-[712px] min-[1080px]:max-w-none">
-          <NewOldToggle />
-          <div
-            className="mt-8 h-[413px] w-full rounded-[12px] bg-[#f0f0f0] ring-1 ring-inset ring-black/[0.06]"
-            role="presentation"
-            aria-hidden="true"
-          />
-        </div>
+        <Part1ListingFigma143203789 />
       </>
     }
     afterSolution={
       <motion.div {...fadeUp} className="mt-10">
-        <p className="font-groww-sans text-[18px] font-semibold leading-[24px] text-[#1F2937]">
-          Why it works
-        </p>
+        <p className={cnHeadingSohne}>Why it works</p>
         <div className="mt-4 flex flex-col gap-4">
           <CheckItem text="Reduces cognitive load" />
           <CheckItem text="Matches user intent directly" />
@@ -426,7 +525,7 @@ const Part2Application = () => (
     title="Order Card — From multi-step to one-flow"
     problemContent={
       <QuoteCard>
-        <p className={`${cnBody} font-semibold text-[#1F2937]`}>Problem</p>
+        <p className="font-sohne text-[14px] font-semibold leading-[20px] text-[#353839]">Problem</p>
         <div className="mt-2 space-y-2">
           <p className={cnBody}>
             Applying for an IPO was{" "}
@@ -453,21 +552,14 @@ const Part2Application = () => (
           <CheckItem text="No page transitions" />
           <CheckItem text="Fundamental improvements on the screen" />
         </div>
-        <div className="mx-auto mt-10 w-[344px] max-w-full">
-          <NewOldToggle />
-          <div
-            className="mt-8 h-[422px] w-full rounded-[12px] bg-[#f0f0f0] ring-1 ring-inset ring-black/[0.06]"
-            role="presentation"
-            aria-hidden="true"
-          />
-        </div>
+        <Part2OrderCardComparison />
       </>
     }
     afterSolution={
       <>
         <motion.div {...fadeUp} className="mt-10">
           <QuoteCard>
-            <p className={`${cnBody} font-semibold text-[#1F2937]`}>
+            <p className="font-sohne text-[14px] font-semibold leading-[20px] text-[#353839]">
               Design Principle
             </p>
             <p className={`${cnBody} mt-1 not-italic`}>
@@ -477,7 +569,7 @@ const Part2Application = () => (
           </QuoteCard>
         </motion.div>
         <motion.div {...fadeUp} className="mt-10">
-          <p className="font-groww-sans text-[18px] font-medium leading-[24px] text-[#1F2937]">
+          <p className={cnHeadingSohne}>
             ⚡️ Result - Reduces steps → faster completion.
           </p>
         </motion.div>
@@ -492,7 +584,7 @@ const Part3PostApplication = () => (
     title="IPO Status Page — From ambiguity to transparency"
     problemContent={
       <QuoteCard>
-        <p className={`${cnBody} font-semibold text-[#1F2937]`}>Problem</p>
+        <p className="font-sohne text-[14px] font-semibold leading-[20px] text-[#353839]">Problem</p>
         <div className="mt-2 space-y-6">
           <p className={cnBody}>
             We faced a surge in queries when there were lots of large IPOs in
@@ -511,7 +603,9 @@ const Part3PostApplication = () => (
     goalText="Make the journey transparent and trustworthy."
     solutionContent={
       <>
-        <p className={`${cnBody} font-medium`}>What can be done</p>
+        <p className="font-sohne text-[14px] font-medium leading-[20px] text-[#353839]">
+          What can be done
+        </p>
         <div className="mt-3 flex flex-col gap-6">
           <CheckItem text="Groww UPI to track mandates, if users applies through Groww UPI, we can get from user&apos;s bank to give exact estimates, of sending mandates, refund statuses, also even if user doesn&apos;t uses Groww UPI, we might not get exact estimates if case of smaller banks, but for biggers banks we can ask them to send us estimates" />
           <CheckItem text="For other steps we&apos;ll provide clear information and highlight timelines at each step" />
@@ -525,7 +619,7 @@ const StatusPageFeatures = () => (
   <>
     <motion.div {...fadeUp}>
       <p className={cnEyebrow}>Status Page — Key Features</p>
-      <h3 className="font-groww-sans mt-2 text-[18px] font-semibold leading-[24px] text-[#1F2937]">
+      <h3 className={`${cnHeadingSohne} mt-2`}>
         Transparency at every step
       </h3>
     </motion.div>
@@ -542,25 +636,43 @@ const StatusPageFeatures = () => (
       </p>
     </motion.div>
 
+    <motion.figure
+      {...fadeUp}
+      className={`relative left-1/2 mt-8 w-[min(100vw-3rem,588px)] max-w-[588px] -translate-x-1/2 ${cnIpoTransparencyFigure}`}
+    >
+      <Image
+        src="/ipo-transparency/143-217077-overview-annotate.png"
+        alt="Application status screen annotated in Figma: UPI mandate timing, vertical status timeline from IPO applied through listing, and application details — transparency at each step"
+        width={IPO_TRANSPARENCY_OVERVIEW_W}
+        height={IPO_TRANSPARENCY_OVERVIEW_H}
+        className="block h-auto w-full align-top"
+        sizes="(max-width: 640px) calc(100vw - 3rem), 588px"
+      />
+      <figcaption className="sr-only">
+        Figma reference frame 143:217077 — overview of mandate messaging, status
+        stepper, and expandable application details.
+      </figcaption>
+    </motion.figure>
+
     <div className="mt-8">
       <ContentDivider />
     </div>
 
     <motion.div {...fadeUp} className="mt-8">
-      <p className="font-groww-sans text-[18px] font-semibold leading-[24px] text-[#1F2937]">
-        Mandate tracking
-      </p>
+      <p className={cnHeadingSohne}>Mandate tracking</p>
       <p className={`${cnBody} mt-3`}>
         Showing where the mandate will be sent — users can see exactly which
         bank will process their payment. For Groww UPI users, we show exact
         updates. For non-Groww UPI, we show estimates from the user&apos;s bank.
         For smaller banks still being integrated, we communicate clearly.
       </p>
-      <div
-        className="mx-auto mt-6 h-[311px] w-full max-w-[180px] rounded-[12px] bg-[#f0f0f0] ring-1 ring-inset ring-black/[0.06]"
-        role="presentation"
-        aria-hidden="true"
-      />
+      <div className="mx-auto mt-6 w-full max-w-[262px]">
+        <IpoTransparencyPhone
+          src="/ipo-transparency/mandate-approve-upi-status.png"
+          alt="Application status: Approve UPI request with active Approve action, status timeline through exchange and listing, and application details row"
+          sizes="(max-width: 480px) 75vw, 262px"
+        />
+      </div>
     </motion.div>
 
     <motion.div {...fadeUp} className="mt-16">
@@ -569,14 +681,18 @@ const StatusPageFeatures = () => (
         right on the status screen when needed.
       </p>
       <div className="mx-auto mt-6 flex max-w-full flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-5">
-        <div
-          className="h-[311px] w-[160px] shrink-0 rounded-[12px] bg-[#f0f0f0] ring-1 ring-inset ring-black/[0.06]"
-          aria-hidden="true"
-        />
-        <div
-          className="h-[311px] w-[160px] shrink-0 rounded-[12px] bg-[#f0f0f0] ring-1 ring-inset ring-black/[0.06]"
-          aria-hidden="true"
-        />
+        <div className="w-full max-w-[262px] shrink-0 sm:w-[262px]">
+          <IpoTransparencyPhone
+            src="/ipo-transparency/mandate-approve-upi-status.png"
+            alt="Status screen with Approve UPI request and primary approve control before opening payment sheet"
+          />
+        </div>
+        <div className="w-full max-w-[262px] shrink-0 sm:w-[262px]">
+          <IpoTransparencyPhone
+            src="/ipo-transparency/actionable-upi-bottom-sheet.png"
+            alt="Approve UPI bottom sheet confirming amount, UPI merchant id, masked bank account, and decline or approve"
+          />
+        </div>
       </div>
     </motion.div>
 
@@ -585,22 +701,24 @@ const StatusPageFeatures = () => (
     </div>
 
     <motion.div {...fadeUp} className="mt-8">
-      <p className="font-groww-sans text-[18px] font-semibold leading-[24px] text-[#1F2937]">
-        Allotment expectations &amp; RTA link
-      </p>
+      <p className={cnHeadingSohne}>Allotment expectations &amp; RTA link</p>
       <p className={`${cnBody} mt-3`}>
         If allotment is delayed, we provide a direct link to the RTA site so users
         can check status themselves — reducing support queries proactively.
       </p>
       <div className="mx-auto mt-6 flex max-w-full flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-6">
-        <div
-          className="h-[311px] w-[160px] shrink-0 rounded-[12px] bg-[#f0f0f0] ring-1 ring-inset ring-black/[0.06]"
-          aria-hidden="true"
-        />
-        <div
-          className="h-[311px] w-[160px] shrink-0 rounded-[12px] bg-[#f0f0f0] ring-1 ring-inset ring-black/[0.06]"
-          aria-hidden="true"
-        />
+        <div className="w-full max-w-[262px] shrink-0 sm:w-[262px]">
+          <IpoTransparencyPhone
+            src="/ipo-transparency/allotment-timeline-registrar-cta.png"
+            alt="Allotment window messaging with check allotment on registrar button and status timeline through listing"
+          />
+        </div>
+        <div className="w-full max-w-[262px] shrink-0 sm:w-[262px]">
+          <IpoTransparencyPhone
+            src="/ipo-transparency/rta-registrar-kfintech.png"
+            alt="External RTA web flow: IPO allotment status form on registrar site with application number and captcha"
+          />
+        </div>
       </div>
     </motion.div>
 
@@ -609,22 +727,24 @@ const StatusPageFeatures = () => (
     </div>
 
     <motion.div {...fadeUp} className="mt-8">
-      <p className="font-groww-sans text-[18px] font-semibold leading-[24px] text-[#1F2937]">
-        Mandate tracking
-      </p>
+      <p className={cnHeadingSohne}>Refund &amp; allotment outcomes</p>
       <p className={`${cnBody} mt-3`}>
         With Groww UPI, we show exact refund and allotment updates. Without it,
         we show the best estimates available from the user&apos;s bank.
       </p>
       <div className="mx-auto mt-6 flex max-w-full flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-6">
-        <div
-          className="h-[311px] w-[160px] shrink-0 rounded-[12px] bg-[#f0f0f0] ring-1 ring-inset ring-black/[0.06]"
-          aria-hidden="true"
-        />
-        <div
-          className="h-[311px] w-[160px] shrink-0 rounded-[12px] bg-[#f0f0f0] ring-1 ring-inset ring-black/[0.06]"
-          aria-hidden="true"
-        />
+        <div className="w-full max-w-[262px] shrink-0 sm:w-[262px]">
+          <IpoTransparencyPhone
+            src="/ipo-transparency/outcome-not-allotted-blocked.png"
+            alt="Not allotted state: blocked amount unblocking window, explained timeline, and disabled trade shares"
+          />
+        </div>
+        <div className="w-full max-w-[262px] shrink-0 sm:w-[262px]">
+          <IpoTransparencyPhone
+            src="/ipo-transparency/outcome-not-allotted-released.png"
+            alt="Not allotted with amount released: full green status timeline, listing gain line, and trade shares action"
+          />
+        </div>
       </div>
     </motion.div>
 
@@ -635,10 +755,11 @@ const StatusPageFeatures = () => (
           their IPO shares — making the long wait worth it.
         </p>
       </QuoteCard>
-      <div className="mt-6 flex justify-center">
-        <div
-          className="h-[311px] w-[160px] rounded-[12px] bg-[#f0f0f0] ring-1 ring-inset ring-black/[0.06]"
-          aria-hidden="true"
+      <div className="mx-auto mt-6 flex w-full max-w-[262px] justify-center">
+        <IpoTransparencyPhone
+          src="/ipo-transparency/allotment-celebration-card.png"
+          alt="Allotted celebration: certificate-style card for Platinum Industries with share count, allotted ribbon, share and help actions, and trade shares"
+          sizes="(max-width: 480px) 75vw, 262px"
         />
       </div>
     </motion.div>
@@ -702,11 +823,16 @@ const IPOJourneyPage = () => {
           <Part3PostApplication />
         </ContentColumn>
 
-        <ContentColumn>
-          <div className="mt-14">
-            <StatusPageFeatures />
+        <section
+          className="mt-14 w-full bg-[#F5F5F5] py-16"
+          aria-label="IPO status page — transparency at every step"
+        >
+          <div className={columnShellClass}>
+            <div className={columnInnerClass}>
+              <StatusPageFeatures />
+            </div>
           </div>
-        </ContentColumn>
+        </section>
 
         <SectionDivider />
 

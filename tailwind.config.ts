@@ -26,11 +26,18 @@ export default {
         "groww-sans": ["var(--font-groww-sans)", "sans-serif"],
         /** Figma: PP Fragment Glare Regular — display hero (143:173019) */
         "fragment-glare": ["var(--font-pp-fragment-glare)", "sans-serif"],
+        /** Inter — subcopy & meta where Figma uses Inter (not Söhne) */
+        "case-inter": ["var(--font-case-inter)", "sans-serif"],
         /**
          * Figma: Sohne Kräftig for eyebrows + heading-small (500).
-         * Inter 500 is used until licensed Sohne files are added under src/fonts/sohne/.
+         * "Söhne UI" loads from public/fonts/sohne/*.woff2 when present; else Inter via --font-case-inter.
          */
-        "case-inter": ["var(--font-case-inter)", "sans-serif"],
+        sohne: [
+          "Söhne UI",
+          "var(--font-case-inter)",
+          "ui-sans-serif",
+          "sans-serif",
+        ],
       },
       colors: {
         background: "var(--background)",

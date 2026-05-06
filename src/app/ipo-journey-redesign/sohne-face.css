@@ -1,0 +1,36 @@
+/**
+ * Söhne (Klim) webfonts — place licensed .woff2 files in public/fonts/sohne/
+ * with these names. If a file is missing, the browser skips that @font-face
+ * and the stack falls back to var(--font-case-inter) from the layout.
+ */
+@font-face {
+  font-family: "Söhne UI";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/sohne/Soehne-Buch.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Söhne UI";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/sohne/Soehne-Kraftig.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Söhne UI";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/sohne/Soehne-Halbfett.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Söhne UI";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/sohne/Soehne-Dreiviertelfett.woff2") format("woff2");
+}

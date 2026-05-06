@@ -16,6 +16,8 @@ const outDir = join(projectRoot, "public", "figma-assets");
 const FILE_KEY = "G6o2gwolW3yxA3PcOskAft";
 const EXPORTS = [
   { id: "4:11798", out: "frame-case-study.png", label: "Full case study (Frame 1)" },
+  /** IPO Journey — Part 1 listing comparison (tabs + New/Old). */
+  { id: "143:203789", out: "ipo-listing-143-203789.png", label: "IPO listing — 143:203789" },
 ];
 
 const loadToken = () => {
