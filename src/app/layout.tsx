@@ -24,9 +24,9 @@ const RootLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <html lang="en" className="bg-white text-zinc-900">
+    <html lang="en" className="text-zinc-900">
       <body
-        className={`${inter.className} ${inter.variable} ${ppFragmentGlare.variable} ${ppFragmentSerifLightItalic.variable} ${ppFragmentSerifLight.variable} min-h-screen bg-white text-zinc-900 antialiased`}
+        className={`${inter.className} ${inter.variable} ${ppFragmentGlare.variable} ${ppFragmentSerifLightItalic.variable} ${ppFragmentSerifLight.variable} min-h-screen text-zinc-900 antialiased`}
       >
         <AuthGate>{children}</AuthGate>
         <Analytics />
