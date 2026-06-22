@@ -90,7 +90,7 @@ const slideTransition = { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const };
 
 const StocksExploreCard = () => (
   <a
-    href="https://www.figma.com/proto/brOGHqVGkVva60GtvxtTJX/Case-studies?node-id=105-213538&t=P3J5AiU2EzKfZovN-0&scaling=contain&content-scaling=fixed&starting-point-node-id=1%3A344828&page-id=0%3A1"
+    href="https://www.figma.com/proto/brOGHqVGkVva60GtvxtTJX/Case-studies?node-id=105-230799&t=P3J5AiU2EzKfZovN-0&scaling=min-zoom&content-scaling=fixed&page-id=1%3A41873"
     target="_blank"
     rel="noopener noreferrer"
     className="block w-full"
