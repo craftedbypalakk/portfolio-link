@@ -1,319 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
-const BG_PRIMARY = "#EFF0F1";
-const BG_CARD = "#FFFFFF";
 const CONTENT_PRIMARY = "#353839";
 const CONTENT_SECONDARY = "#7F8283";
+const RESUME_URL = "https://drive.google.com/file/d/18gOLcOj2GBm0LblX_2mVZulPjZTH1tv7/view?usp=drive_link";
 
-const RESUME_URL =
-  "https://drive.google.com/file/d/18gOLcOj2GBm0LblX_2mVZulPjZTH1tv7/view?usp=drive_link";
-const LINKEDIN_URL = "https://www.linkedin.com/in/palak-blooms/";
-const TWITTER_URL = "https://x.com/palakblooms";
-
-type CaseStudy = {
-  slug: string;
-  eyebrow?: string;
-  titleParts: { text: string; em?: boolean }[];
-  subtitle?: string;
-  imageSrc?: string;
-  /** Exact image area height from Figma (px) */
-  imageHeight?: number;
-  /** Hover state backdrop color */
-  hoverColor?: string;
-  /** Hover state short label (e.g., "Open Interest") */
-  hoverLabel?: string;
-};
-
-const caseStudyByKey: Record<string, CaseStudy> = {
-  openInterest: {
-    slug: "/open-interest-tool",
-    titleParts: [
-      { text: "Designing an " },
-      { text: "Open Interest", em: true },
-      { text: " Trading Tool" },
-    ],
-    subtitle:
-      "Building a tool where traders can understand market’s mood in a blink.",
-    imageSrc: "/oi-thumb.png",
-    imageHeight: 410,
-    hoverColor: "#7B72EE",
-    hoverLabel: "Open Interest",
-  },
-  ipo: {
-    slug: "/ipo-journey-redesign",
-    titleParts: [
-      { text: "Making " },
-      { text: "IPO", em: true },
-      { text: " investing simpler, faster, and more transparent" },
-    ],
-    imageSrc: "/ipo-thumb.png",
-    imageHeight: 279,
-    hoverColor: "#EDAC65",
-    hoverLabel: "IPO Journey",
-  },
-};
-
-type BentoBoxProps = { children: React.ReactNode; className?: string };
-
-const BentoBox = ({ children, className = "" }: BentoBoxProps) => (
-  <div
-    className={`relative h-full w-full overflow-hidden rounded-[20px] shadow-[0_2px_12px_rgba(53,56,57,0.06)] ${className}`}
-    style={{ backgroundColor: BG_CARD }}
-  >
-    {children}
-  </div>
-);
-
-const StocksExploreBentoCard = ({ index }: { index: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 24 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay: 0.1 + index * 0.06 }}
-    className="h-full w-full min-h-0"
-  >
-    <Link
-      href="/groww-stocks-explore"
-      className="block h-full w-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C73A75]"
-      aria-label="Read Stocks Explore case study"
-    >
-      <motion.div
-        initial="rest"
-        whileHover="hovered"
-        className="relative h-full w-full overflow-hidden"
-        style={{ borderRadius: 20 }}
-      >
-        {/* Colored backdrop — full card */}
-        <div
-          className="absolute inset-0"
-          style={{ backgroundColor: "#4B47E5", borderRadius: 20 }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: 24,
-              left: 24,
-              color: "#fff",
-              fontSize: 22,
-              fontWeight: 500,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            Stocks Explore <span style={{ marginLeft: 4 }}>→</span>
-          </div>
-        </div>
-
-        {/* Sliding white card */}
-        <motion.div
-          variants={{
-            rest:    { x: 0,  y: 0,  rotate: 0 },
-            hovered: { x: 32, y: 80, rotate: -5 },
-          }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            position: "relative",
-            height: "100%",
-            width: "100%",
-            transformOrigin: "top left",
-          }}
-        >
-          <BentoBox className="shadow-[0_10px_30px_rgba(0,0,0,0.12)]">
-            <div className="flex h-full w-full flex-col">
-              {/* Image — full image, no cropping */}
-              <div className="relative w-full shrink-0" style={{ aspectRatio: "8192 / 10240" }}>
-                <Image
-                  src="/stocks-explore-thumb.png"
-                  alt=""
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1280px) 25vw, 400px"
-                  quality={100}
-                />
-              </div>
-              {/* Text — Figma Frame 39: x=38, y=506, w=316, h=106 inside 660px card */}
-              <div style={{ paddingTop: 16, paddingLeft: 20, paddingRight: 20, paddingBottom: 48, textAlign: "center" }}>
-                <div
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 500,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.15em",
-                    lineHeight: "12px",
-                    color: CONTENT_SECONDARY,
-                  }}
-                >
-                  3.8M Daily Visits
-                </div>
-                <div
-                  className="font-fragment-glare"
-                  style={{
-                    marginTop: 24,
-                    fontSize: 24,
-                    fontStyle: "normal",
-                    fontWeight: 400,
-                    lineHeight: "normal",
-                    color: CONTENT_PRIMARY,
-                  }}
-                >
-                  <span style={{ whiteSpace: "nowrap" }}>Turning <span className="font-fragment-serif italic">Stocks Explore</span> into</span>
-                  <br />
-                  <span style={{ whiteSpace: "nowrap" }}>a place to research <span className="font-fragment-serif italic">&amp;</span> trade.</span>
-                </div>
-              </div>
-            </div>
-          </BentoBox>
-        </motion.div>
-      </motion.div>
-    </Link>
-  </motion.div>
-);
-
-const CaseStudyBentoCard = ({
-  study,
-  index,
-}: {
-  study: CaseStudy;
-  index: number;
-}) => (
-  <motion.div
-    initial={{ opacity: 0, y: 24 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay: 0.1 + index * 0.06 }}
-    className="h-full w-full min-h-0"
-  >
-    <Link
-      href={study.slug}
-      className="block h-full w-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C73A75]"
-      aria-label="Read case study"
-    >
-      <motion.div
-        initial="rest"
-        whileHover="hovered"
-        className="relative h-full w-full overflow-hidden"
-        style={{ borderRadius: 20 }}
-      >
-        {/* Colored backdrop — fills the ENTIRE card, behind everything */}
-        <div
-          className="absolute inset-0 overflow-hidden"
-          style={{
-            backgroundColor: study.hoverColor ?? "#7B72EE",
-            borderRadius: 20,
-          }}
-        >
-          {study.hoverLabel && (
-            <div
-              style={{
-                position: "absolute",
-                top: 24,
-                left: 24,
-                color: "#fff",
-                fontSize: 22,
-                fontWeight: 500,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {study.hoverLabel} <span style={{ marginLeft: 4 }}>→</span>
-            </div>
-          )}
-        </div>
-
-        {/* Sliding layer — the entire white card slides from the top */}
-        <motion.div
-          variants={{
-            rest:    { x: 0,  y: 0,  rotate: 0 },
-            hovered: { x: 32, y: 80, rotate: -5 },
-          }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            position: "relative",
-            height: "100%",
-            width: "100%",
-            transformOrigin: "top left",
-          }}
-        >
-          <BentoBox className="shadow-[0_10px_30px_rgba(0,0,0,0.12)]">
-            <div className="flex h-full w-full flex-col">
-              {/* Title */}
-              <div style={{ padding: 24, paddingBottom: 0 }}>
-                <div
-                  className="font-fragment-glare"
-                  style={{
-                    fontSize: 24,
-                    fontStyle: "normal",
-                    fontWeight: 400,
-                    lineHeight: "normal",
-                    color: CONTENT_PRIMARY,
-                  }}
-                >
-                  {study.titleParts.map((part, i) =>
-                    part.em ? (
-                      <span key={i} className="font-fragment-serif italic">
-                        {part.text}
-                      </span>
-                    ) : (
-                      <span key={i}>{part.text}</span>
-                    )
-                  )}
-                </div>
-              </div>
-              {/* Image */}
-              {study.imageSrc && (
-                <div
-                  className="relative w-full shrink-0 overflow-hidden"
-                  style={{ height: study.imageHeight ?? 280, marginTop: 2 }}
-                >
-                  <Image
-                    src={study.imageSrc}
-                    alt=""
-                    fill
-                    className="object-cover object-top"
-                    sizes="(max-width: 1280px) 25vw, 400px"
-                    quality={100}
-                  />
-                </div>
-              )}
-              {/* Subtitle */}
-              {study.subtitle && (
-                <div style={{ padding: 24, paddingTop: 2 }}>
-                  <div
-                    style={{
-                      fontSize: 16,
-                      fontStyle: "normal",
-                      fontWeight: 500,
-                      lineHeight: "24px",
-                      color: CONTENT_SECONDARY,
-                    }}
-                  >
-                    {study.subtitle}
-                  </div>
-                </div>
-              )}
-            </div>
-          </BentoBox>
-        </motion.div>
-      </motion.div>
-    </Link>
-  </motion.div>
-);
-
-/** Actual resume image shown as the front page. */
 const ResumePage = () => (
-  <div
-    className="relative h-full w-full overflow-hidden bg-white"
-    style={{ borderRadius: 12, boxShadow: "0px 16px 24px 8px rgba(0,0,0,0.10)" }}
-  >
-    <Image
-      src="/resume.png"
-      alt="Palak Jain resume"
-      fill
-      className="object-cover object-top"
-      quality={100}
-      sizes="356px"
-    />
+  <div className="relative h-full w-full overflow-hidden bg-white" style={{ borderRadius: 12, boxShadow: "0px 16px 24px 8px rgba(0,0,0,0.10)" }}>
+    <Image src="/resume.png" alt="Palak Jain resume" fill className="object-cover object-top" quality={100} sizes="356px" />
   </div>
 );
 
@@ -324,67 +21,35 @@ const ResumeBentoCard = ({ index }: { index: number }) => (
     transition={{ duration: 0.5, delay: 0.1 + index * 0.06 }}
     className="h-full w-full min-h-0"
   >
-    {/*
-      whileHover="hovered" + initial="rest" propagates the variant name to all
-      motion children — no useState, no re-renders, no jitter.
-    */}
     <motion.a
       href={RESUME_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="block h-full w-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C73A75]"
+      className="block h-full w-full"
       aria-label="Open resume in a new tab"
       initial="rest"
       whileHover="hovered"
     >
       <div
         className="relative h-full w-full overflow-hidden shadow-[0_2px_12px_rgba(53,56,57,0.06)]"
-        style={{
-          backgroundColor: BG_CARD,
-          borderRadius: 20,
-          // Forces GPU compositing — fixes Safari overflow:hidden + border-radius clipping bug
-          transform: "translateZ(0)",
-        }}
+        style={{ backgroundColor: "#FFFFFF", borderRadius: 20, transform: "translateZ(0)" }}
       >
-        {/* Label */}
-        <p
-          className="absolute left-1/2 top-5 z-10 -translate-x-1/2 font-fragment-serif text-[14px] italic leading-none"
-          style={{ color: CONTENT_PRIMARY }}
-        >
-          resume
+        <p className="absolute left-1/2 top-5 z-10 -translate-x-1/2 font-fragment-serif text-[14px] italic leading-none" style={{ color: CONTENT_PRIMARY }}>
+          2026
         </p>
-
         {/* Back page — orange, fixed */}
-        <div
-          className="absolute"
-          style={{
-            width: 356,
-            height: 205,
-            bottom: -40,
-            left: 26,
-            borderRadius: 12,
-            backgroundColor: "#EDAC65",
-          }}
-        />
-
+        <div className="absolute" style={{ width: 356, height: 205, bottom: -40, left: 26, borderRadius: 12, backgroundColor: "#EDAC65" }} />
         {/* Middle page — purple */}
         <motion.div
           className="absolute"
-          variants={{
-            rest:    { bottom: -56, left: 74 },
-            hovered: { bottom: -48, left: 58 },
-          }}
+          variants={{ rest: { bottom: -56, left: 74 }, hovered: { bottom: -48, left: 58 } }}
           transition={{ duration: 0.35, ease: "easeOut" }}
           style={{ width: 356, height: 205, borderRadius: 12, backgroundColor: "#7B72EE" }}
         />
-
         {/* Front page — resume image */}
         <motion.div
           className="absolute overflow-hidden"
-          variants={{
-            rest:    { bottom: -72, left: 122 },
-            hovered: { bottom: -56, left: 90 },
-          }}
+          variants={{ rest: { bottom: -72, left: 122 }, hovered: { bottom: -56, left: 90 } }}
           transition={{ duration: 0.35, ease: "easeOut" }}
           style={{ width: 356, height: 205, borderRadius: 12 }}
         >
@@ -395,235 +60,209 @@ const ResumeBentoCard = ({ index }: { index: number }) => (
   </motion.div>
 );
 
-const CUBE_PX = 320;
-const HALF = CUBE_PX / 2;
-const FACE_OFFSET = HALF + 5; // push each face 5px outward → 10px gap between adjacent faces (matches tile gap)
-const CUBE_FACES: { label: string; transform: string; shade: string }[] = [
-  { label: "front",  transform: `translateZ(${FACE_OFFSET}px)`,                    shade: "rgba(255,255,255,0.0)" },
-  { label: "back",   transform: `rotateY(180deg) translateZ(${FACE_OFFSET}px)`,    shade: "rgba(0,0,0,0.25)" },
-  { label: "right",  transform: `rotateY(90deg) translateZ(${FACE_OFFSET}px)`,     shade: "rgba(0,0,0,0.15)" },
-  { label: "left",   transform: `rotateY(-90deg) translateZ(${FACE_OFFSET}px)`,    shade: "rgba(0,0,0,0.20)" },
-  { label: "top",    transform: `rotateX(90deg) translateZ(${FACE_OFFSET}px)`,     shade: "rgba(255,255,255,0.12)" },
-  { label: "bottom", transform: `rotateX(-90deg) translateZ(${FACE_OFFSET}px)`,    shade: "rgba(0,0,0,0.30)" },
-];
+const BentoBox = ({ children, borderColor = "#e5e7eb" }: { children: React.ReactNode; borderColor?: string }) => (
+  <div
+    className="relative h-full w-full overflow-hidden"
+    style={{
+      backgroundColor: "#fff",
+      borderRadius: 20,
+      border: `2px solid ${borderColor}`,
+      boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
+    }}
+  >
+    {children}
+  </div>
+);
 
-const RubiksCube3D = () => (
-  <>
-    <style>{`
-      @keyframes spin-rubiks {
-        0%   { transform: rotateX(0deg)   rotateY(0deg)   rotateZ(0deg); }
-        33%  { transform: rotateX(120deg) rotateY(240deg) rotateZ(90deg); }
-        66%  { transform: rotateX(240deg) rotateY(120deg) rotateZ(210deg); }
-        100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
-      }
-      .rubiks-spin {
-        animation: spin-rubiks 22s linear infinite;
-        transform-style: preserve-3d;
-      }
-    `}</style>
-    <div style={{ perspective: "600px" }} className="flex h-full w-full items-center justify-center">
-      <div
-        className="rubiks-spin"
-        style={{ width: CUBE_PX, height: CUBE_PX, position: "relative" }}
-      >
-        {CUBE_FACES.map((face) => (
-          <div
-            key={face.label}
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gridTemplateRows: "repeat(3, 1fr)",
-              gap: 10,
-              padding: 0,
-              transform: face.transform,
-              backgroundColor: "transparent",
-            }}
-          >
-            {Array.from({ length: 9 }).map((_, i) => (
-              <div
-                key={i}
-                style={{ backgroundColor: "#E4E6E8" }}
-              />
-            ))}
+const slide = {
+  rest:    { x: 0,  y: 0,  rotate: 0 },
+  hovered: { x: 32, y: 80, rotate: -5 },
+};
+const slideTransition = { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const };
+
+const StocksExploreCard = () => (
+  <a
+    href="https://www.figma.com/proto/brOGHqVGkVva60GtvxtTJX/Case-studies?node-id=79-194344&t=P3J5AiU2EzKfZovN-0&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=1%3A344828&show-proto-sidebar=1&page-id=0%3A1"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="block w-full"
+    aria-label="Stocks Explore case study"
+  >
+    <motion.div initial="rest" whileHover="hovered" className="relative w-full overflow-hidden" style={{ borderRadius: 20 }}>
+      {/* Backdrop */}
+      <div className="absolute inset-0" style={{ backgroundColor: "#4B47E5", borderRadius: 20 }}>
+        <div style={{ position: "absolute", top: 24, left: 24, color: "#fff", fontSize: 20, fontWeight: 500, letterSpacing: "-0.01em" }}>
+          Stocks Explore →
+        </div>
+      </div>
+      {/* Sliding card */}
+      <motion.div variants={slide} transition={slideTransition} style={{ position: "relative", width: "100%", transformOrigin: "top left" }}>
+        <div className="relative w-full overflow-hidden" style={{ backgroundColor: "#fff", borderRadius: 20, border: "2px solid #7C6DFF", boxShadow: "0 10px 30px rgba(0,0,0,0.12)" }}>
+          <div className="flex w-full flex-col">
+            <div className="relative w-full shrink-0" style={{ aspectRatio: "8192 / 10240" }}>
+              <Image src="/stocks-explore-thumb.png" alt="" fill className="object-cover" sizes="280px" quality={100} />
+            </div>
+            <div style={{ paddingTop: 14, paddingLeft: 18, paddingRight: 18, paddingBottom: 24, textAlign: "center" }}>
+              <div style={{ fontSize: 9, fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.15em", color: CONTENT_SECONDARY }}>
+                3.8M Daily Visits
+              </div>
+              <div className="font-fragment-glare" style={{ marginTop: 16, fontSize: 20, fontWeight: 400, lineHeight: "normal", color: CONTENT_PRIMARY }}>
+                Turning <span className="font-fragment-serif italic">Stocks Explore</span> into
+                <br />a place to research <span className="font-fragment-serif italic">&amp;</span> trade.
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </>
+        </div>
+      </motion.div>
+    </motion.div>
+  </a>
 );
 
-const AboutBentoCard = ({ index }: { index: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 24 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay: 0.1 + index * 0.06 }}
-    className="h-full w-full min-h-0"
-  >
-    <BentoBox>
-      <div style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", paddingTop: 25, paddingLeft: 24, paddingRight: 24, paddingBottom: 24 }}>
-        <div
-          className="font-fragment-glare"
-          style={{
-            fontSize: 32,
-            fontStyle: "normal",
-            fontWeight: 400,
-            lineHeight: "normal",
-            color: CONTENT_PRIMARY,
-          }}
-        >
-          Hi 👋🏻
-        </div>
-        <div
-          style={{
-            marginTop: 12,
-            fontSize: 16,
-            fontStyle: "normal",
-            fontWeight: 500,
-            lineHeight: "24px",
-            color: CONTENT_SECONDARY,
-          }}
-        >
-          I&apos;m Palak, a Product Designer at{" "}
-          <a
-            href="https://groww.in"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-2"
-            style={{ color: CONTENT_PRIMARY }}
-          >
-            Groww
-          </a>{" "}
-          with 4+ years of experience in fintech.
-          <br />
-          When I&apos;m not designing, I&apos;m usually watering my plants, working on my small clothing brand, or planning my next trip.
-        </div>
-        {/* Rubik's cube — fills remaining space below the text */}
-        <div style={{ flex: 1, minHeight: 0, marginTop: 16 }}>
-          <RubiksCube3D />
+const OICard = () => (
+  <Link href="/open-interest-tool" className="block h-full w-full" aria-label="Open Interest case study">
+    <motion.div initial="rest" whileHover="hovered" className="relative h-full w-full overflow-hidden" style={{ borderRadius: 20 }}>
+      <div className="absolute inset-0" style={{ backgroundColor: "#7B72EE", borderRadius: 20 }}>
+        <div style={{ position: "absolute", top: 24, left: 24, color: "#fff", fontSize: 20, fontWeight: 500 }}>
+          Open Interest →
         </div>
       </div>
-    </BentoBox>
-  </motion.div>
+      <motion.div variants={slide} transition={slideTransition} style={{ position: "relative", height: "100%", width: "100%", transformOrigin: "top left" }}>
+        <BentoBox borderColor="#87BD44">
+          <div className="flex h-full w-full flex-col">
+            <div style={{ padding: "20px 20px 0" }}>
+              <div className="font-fragment-glare" style={{ fontSize: 18, fontWeight: 400, lineHeight: 1.35, color: CONTENT_PRIMARY }}>
+                Designing an <span className="font-fragment-serif italic">Open Interest</span> Trading Tool
+              </div>
+            </div>
+            <div className="relative flex-1 overflow-hidden" style={{ marginTop: 8 }}>
+              <Image src="/oi-thumb.png" alt="" fill className="object-cover object-top" sizes="280px" quality={100} />
+            </div>
+            <div style={{ padding: "8px 20px 16px" }}>
+              <div style={{ fontSize: 12, fontWeight: 500, lineHeight: "18px", color: CONTENT_SECONDARY }}>
+                Building a tool where traders can understand market&apos;s mood in a blink.
+              </div>
+            </div>
+          </div>
+        </BentoBox>
+      </motion.div>
+    </motion.div>
+  </Link>
 );
 
-const ContactBentoCard = ({ index }: { index: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 24 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay: 0.1 + index * 0.06 }}
-    className="h-full w-full min-h-0"
-  >
-    <BentoBox>
-      <div className="flex h-full w-full items-center justify-center gap-10">
-        {/* X (Twitter) */}
-        <a
-          href={TWITTER_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="X (Twitter) profile"
-          className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-[#4B47E5] text-[#4B47E5] transition-opacity hover:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4B47E5]"
-        >
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.763l7.728-8.835L2.3 2.25h6.993l4.265 5.634L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
-          </svg>
-        </a>
-        {/* LinkedIn */}
-        <a
-          href={LINKEDIN_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="LinkedIn profile"
-          className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-[#4B47E5] text-[#4B47E5] transition-opacity hover:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4B47E5]"
-        >
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-          </svg>
-        </a>
+const IPOCard = () => (
+  <Link href="/ipo-journey-redesign" className="block h-full w-full" aria-label="IPO case study">
+    <motion.div initial="rest" whileHover="hovered" className="relative h-full w-full overflow-hidden" style={{ borderRadius: 20 }}>
+      <div className="absolute inset-0" style={{ backgroundColor: "#EDAC65", borderRadius: 20 }}>
+        <div style={{ position: "absolute", top: 24, left: 24, color: "#fff", fontSize: 20, fontWeight: 500 }}>
+          IPO Journey →
+        </div>
       </div>
-    </BentoBox>
-  </motion.div>
+      <motion.div variants={slide} transition={slideTransition} style={{ position: "relative", height: "100%", width: "100%", transformOrigin: "top left" }}>
+        <BentoBox borderColor="#FABF6C">
+          <div className="flex h-full w-full flex-col">
+            <div style={{ padding: "20px 20px 0" }}>
+              <div className="font-fragment-glare" style={{ fontSize: 18, fontWeight: 400, lineHeight: 1.35, color: CONTENT_PRIMARY }}>
+                Making <span className="font-fragment-serif italic">IPO</span> investing simpler, faster, and more transparent
+              </div>
+            </div>
+            <div className="relative flex-1 overflow-hidden" style={{ marginTop: 8 }}>
+              <Image src="/ipo-thumb.png" alt="" fill className="object-cover object-top" sizes="280px" quality={100} />
+            </div>
+          </div>
+        </BentoBox>
+      </motion.div>
+    </motion.div>
+  </Link>
 );
 
-// Artboard dimensions (matches Figma 1440×1024 canvas, 24px padding each side)
-const GRID_W = 392 + 24 + 560 + 24 + 392; // 1392
-const GRID_H = 976;
-const ARTBOARD_W = GRID_W + 48; // 1440
-const ARTBOARD_H = GRID_H + 48; // 1024
-
-const LandingPage = () => {
-  const [scale, setScale] = useState(1);
-
-  useEffect(() => {
-    document.body.style.backgroundColor = BG_PRIMARY;
-    document.documentElement.style.backgroundColor = BG_PRIMARY;
-    // Prevent document scroll — body overflow doesn't clip absolutely-positioned children
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-
-    const update = () => {
-      setScale(Math.min(1, window.innerWidth / ARTBOARD_W, window.innerHeight / ARTBOARD_H));
-    };
-    update();
-    window.addEventListener("resize", update);
-    return () => {
-      window.removeEventListener("resize", update);
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
-    };
-  }, []);
-
+export default function Home() {
   return (
-    // Full-viewport background — no overflow:hidden so scaled content is never clipped
-    <div style={{ position: "fixed", inset: 0, backgroundColor: BG_PRIMARY }}>
-      {/*
-        Scale wrapper: explicitly sized to the artboard, centered via calc,
-        then scaled as a single unit. transform-origin: center keeps it centered.
-      */}
-      <div
-        style={{
-          position: "absolute",
-          width: GRID_W,
-          height: GRID_H,
-          top: `calc(50% - ${GRID_H / 2}px)`,
-          left: `calc(50% - ${GRID_W / 2}px)`,
-          transform: `scale(${scale})`,
-          transformOrigin: "center center",
-        }}
-      >
-        <div className="grid gap-6" style={{ gridTemplateColumns: "392px 560px 392px" }}>
-          {/* Left column */}
-          <div className="flex flex-col gap-6">
-            <div style={{ width: 392, height: 292 }}><ResumeBentoCard index={0} /></div>
-            <div style={{ width: 392, height: 660 }}><StocksExploreBentoCard index={1} /></div>
+    <div className="relative min-h-screen overflow-hidden" style={{ padding: "80px 96px" }}>
+
+      {/* ── Main layout ── */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+
+        {/* LEFT: About */}
+        <div style={{ width: 380, flexShrink: 0, height: "calc(100vh - 200px)", display: "flex", flexDirection: "column" }}>
+          <h1 className="font-fragment-glare" style={{ fontSize: 44, fontWeight: 400, lineHeight: 1, marginBottom: 16, flexShrink: 0 }}>
+            Hi 👋🏻
+          </h1>
+
+          {/* Sticky notes — flex:1 so they fill space between heading and resume */}
+          <div className="relative" style={{ flex: 1, minHeight: 320 }}>
+            {/* Blue note */}
+            <div className="absolute" style={{ width: 224, top: 0, left: 0, backgroundColor: "#A9DFFF", borderRadius: 3, padding: "20px 18px 16px", transform: "rotate(-2deg)", boxShadow: "0 4px 20px rgba(0,0,0,0.12)", zIndex: 1, fontFamily: "var(--font-matter)" }}>
+              <p style={{ fontSize: 14, lineHeight: 1.55, fontWeight: 500, color: "#1a1a1a" }}>
+                I&apos;m Palak, a Product Designer at{" "}
+                <span style={{ textDecoration: "underline" }}>Groww</span> with 4+ years of experience in fintech.
+              </p>
+              <p style={{ marginTop: 48, fontSize: 10, color: "#666" }}>Palak</p>
+            </div>
+            {/* Yellow note */}
+            <div className="absolute" style={{ width: 212, top: 120, left: 110, backgroundColor: "#F7FF5D", borderRadius: 3, padding: "20px 18px 14px", transform: "rotate(1deg)", boxShadow: "0 4px 20px rgba(0,0,0,0.12)", zIndex: 2, fontFamily: "var(--font-matter)" }}>
+              <p style={{ fontSize: 14, lineHeight: 1.55, fontWeight: 500, color: "#1a1a1a" }}>
+                When I&apos;m not designing, I&apos;m usually watering my plants, working on my small clothing brand, or planning my next trip.
+              </p>
+              <div style={{ marginTop: 14 }}>
+                <svg width="30" height="18" viewBox="0 0 30 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M12.2261 10.8874C6.47914 10.8618 2.78423 7.52683 1.01113 4.81295C0.462544 3.9733 0.817311 2.87693 1.71104 2.42174C9.60384 -1.59819 13.4165 2.49919 14.92 6.88096C16.4236 2.49919 20.2362 -1.59819 28.129 2.42174C29.0227 2.87693 29.3775 3.9733 28.8289 4.81295C26.8923 7.77712 22.663 11.4822 15.9715 10.807L16.1389 15.6838C16.1684 16.5405 15.4818 17.251 14.6246 17.251C13.8899 17.251 13.261 16.7238 13.1327 16.0003L12.2261 10.8874Z" fill="#14AE5C"/>
+                  <path d="M12.2261 10.8874L12.9645 10.7565C12.9013 10.3996 12.5918 10.1391 12.2294 10.1374L12.2261 10.8874ZM1.01113 4.81295L1.639 4.40274H1.639L1.01113 4.81295ZM1.71104 2.42174L1.37066 1.75343H1.37066L1.71104 2.42174ZM14.92 6.88096L14.2106 7.12439C14.3146 7.42744 14.5996 7.63096 14.92 7.63096C15.2404 7.63096 15.5254 7.42744 15.6294 7.12439L14.92 6.88096ZM28.129 2.42174L27.7886 3.09005V3.09005L28.129 2.42174ZM28.8289 4.81295L28.2011 4.40273V4.40274L28.8289 4.81295ZM15.9715 10.807L16.0468 10.0608C15.8314 10.0391 15.6171 10.1115 15.459 10.2594C15.3009 10.4073 15.2145 10.6164 15.2219 10.8327L15.9715 10.807ZM16.1389 15.6838L16.8885 15.658V15.658L16.1389 15.6838ZM13.1327 16.0003L12.3942 16.1313L13.1327 16.0003ZM12.2261 10.8874L12.2294 10.1374C6.80354 10.1132 3.31682 6.97077 1.639 4.40274L1.01113 4.81295L0.383259 5.22317C2.25165 8.08289 6.15474 11.6103 12.2227 11.6374L12.2261 10.8874ZM1.01113 4.81295L1.639 4.40274C1.36116 3.97748 1.51032 3.36565 2.05143 3.09005L1.71104 2.42174L1.37066 1.75343C0.124303 2.38822 -0.436074 3.96912 0.383259 5.22317L1.01113 4.81295ZM1.71104 2.42174L2.05143 3.09005C5.8631 1.1487 8.52773 1.24238 10.3746 2.17081C12.2563 3.11668 13.491 5.02714 14.2106 7.12439L14.92 6.88096L15.6294 6.63754C14.8455 4.35301 13.4221 2.0239 11.0483 0.830615C8.63986 -0.380108 5.45178 -0.325154 1.37066 1.75343L1.71104 2.42174ZM28.129 2.42174L28.4694 1.75343C24.3883 -0.325154 21.2002 -0.380108 18.7917 0.830615C16.4179 2.0239 14.9945 4.35301 14.2106 6.63754L14.92 6.88096L15.6294 7.12439C16.3491 5.02714 17.5838 3.11668 19.4654 2.17081C21.3123 1.24238 23.977 1.1487 27.7886 3.09005L28.129 2.42174ZM28.8289 4.81295L29.4568 5.22317C30.2761 3.96912 29.7158 2.38822 28.4694 1.75343L28.129 2.42174L27.7886 3.09005C28.3297 3.36565 28.4789 3.97748 28.2011 4.40273L28.8289 4.81295ZM15.9715 10.807L15.8962 11.5532C22.9438 12.2643 27.4147 8.34883 29.4568 5.22317L28.8289 4.81295L28.2011 4.40274C26.3699 7.20541 22.3823 10.7 16.0468 10.0608L15.9715 10.807ZM16.1389 15.6838L16.8885 15.658L16.7211 10.7813L15.9715 10.807L15.2219 10.8327L15.3894 15.7095L16.1389 15.6838ZM14.6246 17.251V18.001C15.9061 18.001 16.9325 16.9388 16.8885 15.658L16.1389 15.6838L15.3894 15.7095C15.4042 16.1421 15.0575 16.501 14.6246 16.501V17.251ZM13.1327 16.0003L12.3942 16.1313C12.586 17.2128 13.5262 18.001 14.6246 18.001V17.251V16.501C14.2536 16.501 13.936 16.2347 13.8712 15.8694L13.1327 16.0003ZM12.2261 10.8874L11.4876 11.0184L12.3942 16.1313L13.1327 16.0003L13.8712 15.8694L12.9645 10.7565L12.2261 10.8874Z" fill="#1A1A1A"/>
+                  <path d="M17.9002 6.97554C20.0584 5.44049 22.4738 4.40624 24.3513 3.79146C24.8664 3.62276 24.8304 2.88501 24.2883 2.87862C20.7642 2.83708 18.4933 4.69835 17.2733 6.46604C16.9793 6.89207 17.4784 7.27557 17.9002 6.97554Z" fill="#036838"/>
+                  <path d="M10.9436 6.97554C8.78534 5.44049 6.36991 4.40624 4.49249 3.79146C3.97732 3.62276 4.01338 2.88501 4.55544 2.87862C8.07959 2.83708 10.3504 4.69835 11.5704 6.46604C11.8644 6.89207 11.3654 7.27557 10.9436 6.97554Z" fill="#036838"/>
+                </svg>
+              </div>
+              <p style={{ marginTop: 6, fontSize: 10, color: "#333" }}>Palak</p>
+            </div>
           </div>
-          {/* Middle column */}
-          <div className="flex flex-col gap-6">
-            <div style={{ width: 560, height: 814 }}><AboutBentoCard index={2} /></div>
-            <div style={{ width: 560, height: 138 }}><ContactBentoCard index={3} /></div>
+
+          {/* Resume section — normal flex child below sticky notes, no overlap */}
+          <div style={{ flexShrink: 0 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", backgroundColor: "#C2E5FF", borderRadius: 8, padding: "4px 16px", fontSize: 14, fontWeight: 500, fontFamily: "var(--font-matter)", color: "#000000", marginBottom: 4 }}>
+              Resume
+            </div>
+            <div style={{ border: "2px solid #93CCEA", borderRadius: 24, backgroundColor: "rgba(194, 229, 255, 0.25)", padding: 12, height: 240, overflow: "hidden" }}>
+              <ResumeBentoCard index={3} />
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8 }}>
+              <a href="https://twitter.com/craftedbypalak" target="_blank" rel="noopener noreferrer"
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}>
+                <svg width="40" height="40" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.0859 2.625C21.3718 2.62498 23.9527 2.62462 25.9678 2.89551C28.0327 3.17314 29.6717 3.75375 30.959 5.04102C32.2463 6.32831 32.8269 7.96724 33.1045 10.0322C33.3754 12.0473 33.375 14.6282 33.375 17.9141V18.0859C33.375 21.3718 33.3754 23.9527 33.1045 25.9678C32.8269 28.0328 32.2463 29.6717 30.959 30.959C29.6717 32.2463 28.0328 32.8269 25.9678 33.1045C23.9527 33.3754 21.3718 33.375 18.0859 33.375H17.9141C14.6282 33.375 12.0473 33.3754 10.0322 33.1045C7.96724 32.8269 6.32831 32.2463 5.04102 30.959C3.75375 29.6717 3.17314 28.0327 2.89551 25.9678C2.62462 23.9527 2.62498 21.3718 2.625 18.0859V17.9141C2.62498 14.6282 2.62462 12.0473 2.89551 10.0322C3.17314 7.96725 3.75373 6.32831 5.04102 5.04102C6.32831 3.75372 7.96724 3.17314 10.0322 2.89551C12.0473 2.62461 14.6282 2.62498 17.9141 2.625H18.0859ZM18 4.875C14.6095 4.875 12.1799 4.87756 10.332 5.12598C8.51654 5.37006 7.43238 5.83325 6.63281 6.63281C5.83325 7.43238 5.37006 8.51656 5.12598 10.332C4.87756 12.1799 4.875 14.6095 4.875 18C4.875 21.3904 4.87757 23.8201 5.12598 25.668C5.37006 27.4834 5.83327 28.5676 6.63281 29.3672C7.43238 30.1668 8.51654 30.6299 10.332 30.874C12.1799 31.1224 14.6095 31.125 18 31.125C21.3904 31.125 23.8201 31.1224 25.668 30.874C27.4835 30.6299 28.5686 30.1668 29.3682 29.3672C30.1674 28.5677 30.63 27.4831 30.874 25.668C31.1224 23.8201 31.125 21.3904 31.125 18C31.125 14.6095 31.1224 12.1799 30.874 10.332C30.63 8.51688 30.1675 7.43234 29.3682 6.63281C28.5686 5.83325 27.4835 5.37006 25.668 5.12598C23.8201 4.87757 21.3904 4.875 18 4.875ZM14.667 9.375C15.0281 9.37509 15.3677 9.54902 15.5791 9.8418L19.3486 15.0605L24.7041 9.7041C25.1434 9.26478 25.8566 9.26481 26.2959 9.7041C26.7352 10.1434 26.7352 10.8566 26.2959 11.2959L20.6826 16.9082L26.4121 24.8418C26.6592 25.1841 26.694 25.6358 26.502 26.0117C26.3096 26.3879 25.9225 26.625 25.5 26.625H21.333C20.9719 26.6249 20.6323 26.4519 20.4209 26.1592L16.6514 20.9395L11.2959 26.2959C10.8566 26.7352 10.1434 26.7352 9.7041 26.2959C9.26481 25.8566 9.26479 25.1434 9.7041 24.7041L15.3174 19.0918L9.58789 11.1592C9.34064 10.8168 9.30599 10.3643 9.49805 9.98828C9.69037 9.61215 10.0776 9.37502 10.5 9.375H14.667ZM21.9082 24.375H23.2998L14.0918 11.625H12.7002L21.9082 24.375Z" fill="#9D70C4"/></svg>
+              </a>
+              <a href="https://linkedin.com/in/palakjain" target="_blank" rel="noopener noreferrer"
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}>
+                <svg width="40" height="40" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.0859 33.375C21.3718 33.375 23.9527 33.3754 25.9678 33.1045C28.0328 32.8269 29.6717 32.2463 30.959 30.959C32.2463 29.6717 32.8269 28.0328 33.1045 25.9678C33.3754 23.9527 33.375 21.3718 33.375 18.0859V17.9141C33.375 14.6282 33.3754 12.0473 33.1045 10.0322C32.8269 7.96724 32.2463 6.32831 30.959 5.04102C29.6717 3.75372 28.0328 3.17314 25.9678 2.89551C23.9527 2.62462 21.3718 2.62498 18.0859 2.625H17.9141C14.6282 2.62498 12.0473 2.62462 10.0322 2.89551C7.96724 3.17314 6.32831 3.75372 5.04102 5.04102C3.75372 6.32831 3.17314 7.96724 2.89551 10.0322C2.62462 12.0473 2.62498 14.6282 2.625 17.9141V18.0859C2.62498 21.3718 2.62462 23.9527 2.89551 25.9678C3.17314 28.0328 3.75372 29.6717 5.04102 30.959C6.32831 32.2463 7.96724 32.8269 10.0322 33.1045C12.0473 33.3754 14.6282 33.375 17.9141 33.375H18.0859ZM18 31.125C14.6095 31.125 12.1799 31.1224 10.332 30.874C8.51654 30.6299 7.43238 30.1668 6.63281 29.3672C5.83325 28.5676 5.37006 27.4835 5.12598 25.668C4.87756 23.8201 4.875 21.3905 4.875 18C4.875 14.6095 4.87756 12.1799 5.12598 10.332C5.37006 8.51654 5.83325 7.43238 6.63281 6.63281C7.43238 5.83325 8.51654 5.37006 10.332 5.12598C12.1799 4.87756 14.6095 4.875 18 4.875C21.3905 4.875 23.8201 4.87756 25.668 5.12598C27.4835 5.37006 28.5676 5.83325 29.3672 6.63281C30.1668 7.43238 30.6299 8.51654 30.874 10.332C31.1224 12.1799 31.125 14.6095 31.125 18C31.125 21.3905 31.1224 23.8201 30.874 25.668C30.6299 27.4835 30.1668 28.5676 29.3672 29.3672C28.5676 30.1668 27.4835 30.6299 25.668 30.874C23.8201 31.1224 21.3905 31.125 18 31.125ZM10.5117 12C11.3401 12 12.0117 11.3284 12.0117 10.5C12.0117 9.67157 11.3401 9 10.5117 9H10.498C9.66971 9.00011 8.99805 9.67164 8.99805 10.5C8.99805 11.3284 9.66971 11.9999 10.498 12H10.5117ZM10.5 26.625C11.1213 26.625 11.625 26.1213 11.625 25.5V15C11.625 14.3787 11.1213 13.875 10.5 13.875C9.87868 13.875 9.375 14.3787 9.375 15L9.375 25.5C9.375 26.1213 9.87868 26.625 10.5 26.625ZM25.5 26.625C26.1213 26.625 26.625 26.1213 26.625 25.5V19.5C26.625 16.3934 24.1066 13.875 21 13.875C19.7337 13.875 18.5651 14.2938 17.625 15C17.6248 14.3789 17.1212 13.875 16.5 13.875C15.8787 13.875 15.375 14.3787 15.375 15V25.5C15.375 26.1213 15.8787 26.625 16.5 26.625C17.1213 26.625 17.625 26.1213 17.625 25.5V19.5C17.625 17.636 19.136 16.125 21 16.125C22.864 16.125 24.375 17.636 24.375 19.5V25.5C24.375 26.1213 24.8787 26.625 25.5 26.625Z" fill="#76C236"/></svg>
+              </a>
+            </div>
           </div>
-          {/* Right column */}
-          <div className="flex flex-col gap-6">
-            <div style={{ width: 392, height: 580 }}><CaseStudyBentoCard study={caseStudyByKey.openInterest} index={4} /></div>
-            <div style={{ width: 392, height: 372 }}><CaseStudyBentoCard study={caseStudyByKey.ipo} index={5} /></div>
+        </div>
+
+        {/* RIGHT: My work */}
+        <div style={{ flexShrink: 0, position: "relative" }}>
+          {/* Pill */}
+          <div style={{ display: "inline-flex", alignItems: "center", backgroundColor: "#DDD6FE", borderRadius: 8, padding: "4px 16px", fontSize: 14, fontWeight: 500, fontFamily: "var(--font-matter)", color: "#000000", marginBottom: 4, position: "relative", zIndex: 10 }}>
+            My work
+          </div>
+          {/* Container — draft 1 card sizes: SE 392×660, OI 392×580, IPO 392×372 */}
+          <div style={{ border: "2px solid #C4B5FD", borderRadius: 24, backgroundColor: "rgba(237,233,254,0.3)", padding: 20, display: "flex", gap: 16, position: "relative" }}>
+
+            {/* Left: Stocks Explore 294×495 */}
+            <div style={{ width: 294, flexShrink: 0, position: "relative" }}>
+              {/* Star sticker top-right of card */}
+              <div className="absolute pointer-events-none" style={{ top: -16, right: -20, zIndex: 20 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/star-sticker.svg" width="60" height="58" alt="" style={{ filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.18))" }} />
+              </div>
+              <div style={{ height: 495 }}><StocksExploreCard /></div>
+            </div>
+
+            {/* Right: OI 294×435 + IPO 294×279 */}
+            <div style={{ width: 294, flexShrink: 0, display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ height: 435 }}><OICard /></div>
+              <div style={{ height: 279 }}><IPOCard /></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default LandingPage;
+}

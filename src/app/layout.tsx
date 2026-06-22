@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ppFragmentGlare } from "@/fonts/ppFragmentGlare";
 import { ppFragmentSerifLightItalic, ppFragmentSerifLight } from "@/fonts/ppFragmentSerifLightItalic";
+import { matter } from "@/fonts/matter";
 import AuthGate from "@/components/AuthGate";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
@@ -26,7 +27,7 @@ const RootLayout = ({
   return (
     <html lang="en" className="text-zinc-900">
       <body
-        className={`${inter.className} ${inter.variable} ${ppFragmentGlare.variable} ${ppFragmentSerifLightItalic.variable} ${ppFragmentSerifLight.variable} min-h-screen text-zinc-900 antialiased`}
+        className={`${inter.className} ${inter.variable} ${ppFragmentGlare.variable} ${ppFragmentSerifLightItalic.variable} ${ppFragmentSerifLight.variable} ${matter.variable} min-h-screen text-zinc-900 antialiased`}
       >
         <AuthGate>{children}</AuthGate>
         <Analytics />
