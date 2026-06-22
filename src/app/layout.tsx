@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ppFragmentGlare } from "@/fonts/ppFragmentGlare";
 import { ppFragmentSerifLightItalic, ppFragmentSerifLight } from "@/fonts/ppFragmentSerifLightItalic";
 import AuthGate from "@/components/AuthGate";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const inter = Inter({
@@ -28,6 +29,7 @@ const RootLayout = ({
         className={`${inter.className} ${inter.variable} ${ppFragmentGlare.variable} ${ppFragmentSerifLightItalic.variable} ${ppFragmentSerifLight.variable} min-h-screen bg-white text-zinc-900 antialiased`}
       >
         <AuthGate>{children}</AuthGate>
+        <Analytics />
       </body>
     </html>
   );
