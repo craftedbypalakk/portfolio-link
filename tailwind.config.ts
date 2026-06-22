@@ -26,6 +26,10 @@ export default {
         "groww-sans": ["var(--font-groww-sans)", "sans-serif"],
         /** Figma: PP Fragment Glare Regular — display hero (143:173019) */
         "fragment-glare": ["var(--font-pp-fragment-glare)", "sans-serif"],
+        /** Figma: PP Fragment Serif Light Italic — "resume" label */
+        "fragment-serif": ["var(--font-pp-fragment-serif-light-italic)", "serif"],
+        /** PP Fragment Serif Light (with italic fallback) — title body copy */
+        "fragment-serif-light": ["var(--font-pp-fragment-serif-light)", "serif"],
         /** Inter — subcopy & meta where Figma uses Inter (not Söhne) */
         "case-inter": ["var(--font-case-inter)", "sans-serif"],
         /**
