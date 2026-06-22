@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 
 const CONTENT_PRIMARY = "#353839";
 const CONTENT_SECONDARY = "#7F8283";
@@ -104,7 +103,7 @@ const StocksExploreCard = () => (
         </div>
       </div>
       {/* Sliding card */}
-      <motion.div variants={slide} transition={slideTransition} style={{ position: "relative", width: "100%", transformOrigin: "top left" }}>
+      <motion.div variants={slide} transition={slideTransition} style={{ position: "relative", width: "100%", transformOrigin: "top left", willChange: "transform", transform: "translateZ(0)" }}>
         <div className="relative w-full overflow-hidden" style={{ backgroundColor: "#fff", borderRadius: 20, border: "2px solid #7C6DFF", boxShadow: "0 10px 30px rgba(0,0,0,0.12)" }}>
           <div className="flex w-full flex-col">
             <div className="relative w-full shrink-0" style={{ aspectRatio: "8192 / 10240" }}>
@@ -134,7 +133,7 @@ const OICard = () => (
           Open Interest →
         </div>
       </div>
-      <motion.div variants={slideDown} transition={slideTransition} style={{ position: "relative", height: "100%", width: "100%", transformOrigin: "top left" }}>
+      <motion.div variants={slideDown} transition={slideTransition} style={{ position: "relative", height: "100%", width: "100%", transformOrigin: "top left", willChange: "transform", transform: "translateZ(0)" }}>
         <BentoBox borderColor="#87BD44">
           <div className="flex h-full w-full flex-col">
             <div style={{ padding: "20px 20px 0" }}>
@@ -165,7 +164,7 @@ const IPOCard = () => (
           IPO Journey →
         </div>
       </div>
-      <motion.div variants={slideLeft} transition={slideTransition} style={{ position: "relative", height: "100%", width: "100%", transformOrigin: "top left" }}>
+      <motion.div variants={slideLeft} transition={slideTransition} style={{ position: "relative", height: "100%", width: "100%", transformOrigin: "top left", willChange: "transform", transform: "translateZ(0)" }}>
         <BentoBox borderColor="#FABF6C">
           <div className="flex h-full w-full flex-col">
             <div style={{ padding: "20px 20px 0" }}>
@@ -209,7 +208,7 @@ export default function Home() {
             {/* Yellow note */}
             <div className="absolute" style={{ width: 212, top: 120, left: 110, backgroundColor: "#F7FF5D", borderRadius: 3, padding: "20px 18px 14px", transform: "rotate(1deg)", boxShadow: "0 4px 20px rgba(0,0,0,0.12)", zIndex: 2, fontFamily: "var(--font-matter)" }}>
               <p style={{ fontSize: 14, lineHeight: 1.55, fontWeight: 500, color: "#1a1a1a" }}>
-                When I&apos;m not designing, I&apos;m usually watering my plants, working on my small clothing brand, or planning my next trip.
+                When I&apos;m not designing, I&apos;m usually watering my plants or planning my next trip.
               </p>
               <p style={{ marginTop: 20, fontSize: 10, color: "#333" }}>Palak</p>
             </div>
