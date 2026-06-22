@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import { ppFragmentGlare } from "@/fonts/ppFragmentGlare";
 import { ppFragmentSerifLightItalic, ppFragmentSerifLight } from "@/fonts/ppFragmentSerifLightItalic";
 import { matter } from "@/fonts/matter";
-import AuthGate from "@/components/AuthGate";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
@@ -14,9 +13,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Design Case Studies",
+  title: "Palak's Portfolio",
   description:
     "A collection of product design case studies — deep dives into real product problems, process, and outcomes.",
+  icons: [
+    { rel: "icon", url: "/favicon.svg", type: "image/svg+xml" },
+  ],
 };
 
 const RootLayout = ({
@@ -29,7 +31,7 @@ const RootLayout = ({
       <body
         className={`${inter.className} ${inter.variable} ${ppFragmentGlare.variable} ${ppFragmentSerifLightItalic.variable} ${ppFragmentSerifLight.variable} ${matter.variable} min-h-screen text-zinc-900 antialiased`}
       >
-        <AuthGate>{children}</AuthGate>
+        {children}
         <Analytics />
       </body>
     </html>
