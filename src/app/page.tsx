@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const CONTENT_PRIMARY = "#353839";
 const CONTENT_SECONDARY = "#7F8283";
-const RESUME_URL = "https://drive.google.com/file/d/18gOLcOj2GBm0LblX_2mVZulPjZTH1tv7/view?usp=drive_link";
+const RESUME_URL = "https://drive.google.com/drive/u/4/folders/1cveusnjEsvfO4bC_Ij-9L4XpYTFjyp66";
 
 const ResumePage = () => (
   <div className="relative h-full w-full overflow-hidden bg-white" style={{ borderRadius: 12, boxShadow: "0px 16px 24px 8px rgba(0,0,0,0.10)" }}>
