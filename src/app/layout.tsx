@@ -27,9 +27,10 @@ const RootLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <html lang="en" className="text-zinc-900">
+    <html lang="en" style={{ backgroundColor: "#0C0C0C" }}>
       <body
-        className={`${inter.className} ${inter.variable} ${ppFragmentGlare.variable} ${ppFragmentSerifLightItalic.variable} ${ppFragmentSerifLight.variable} ${matter.variable} min-h-screen text-zinc-900 antialiased`}
+        className={`${inter.className} ${inter.variable} ${ppFragmentGlare.variable} ${ppFragmentSerifLightItalic.variable} ${ppFragmentSerifLight.variable} ${matter.variable} min-h-screen antialiased`}
+        style={{ backgroundColor: "#0C0C0C" }}
       >
         {children}
         <Analytics />
