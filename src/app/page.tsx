@@ -233,6 +233,20 @@ export default function Home() {
                 margin: 0,
               }}
             >
+              Hey! I&apos;m Palak, been working at Groww for the last 4 years as a product designer.
+            </p>
+            <p
+              style={{
+                fontFamily: "var(--font-matter)",
+                fontSize: 16,
+                fontWeight: 400,
+                lineHeight: "24px",
+                color: "#8E8E93",
+                maxWidth: 392,
+                marginTop: 32,
+                marginBottom: 0,
+              }}
+            >
               When I&apos;m not designing, you&apos;ll probably find me planning
               my next trip, curled up with a book, or convincing myself I have
               room for one more plant.
@@ -250,7 +264,7 @@ export default function Home() {
               }}
             >
               Curiosity is a big part of who I am and it&apos;s what shapes the
-              way I design - asking questions, exploring ideas, and creating
+              way I design—asking questions, exploring ideas, and creating
               experiences that are simple, useful, and thoughtfully crafted.
             </p>
           </div>
